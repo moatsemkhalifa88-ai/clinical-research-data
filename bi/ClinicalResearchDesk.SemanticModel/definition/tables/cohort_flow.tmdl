@@ -1,0 +1,53 @@
+table cohort_flow
+	lineageTag: 0c0bfba1-a1e9-4aad-9c0f-27f6ea13752e
+
+	measure 'Patients at Step' = SUM ( cohort_flow[patients] )
+		formatString: 0
+		lineageTag: d02292d1-beef-4b0d-88ec-0caf32080630
+
+	measure 'Retained %' = DIVIDE ( [Patients at Step], CALCULATE ( SUM ( cohort_flow[patients] ), REMOVEFILTERS ( cohort_flow ), cohort_flow[step_order] = 1 ) )
+		formatString: 0%
+		lineageTag: f6ad34a7-674a-48ed-ab0a-15fa0ee26758
+
+	column step_order
+		dataType: int64
+		isHidden
+		lineageTag: bc4fb27f-1e8e-4a42-b819-2486e6ccabae
+		summarizeBy: none
+		sourceColumn: step_order
+
+	column step
+		dataType: string
+		lineageTag: 2811823b-3519-4e14-a916-9f03fd28857a
+		summarizeBy: none
+		sourceColumn: step
+		sortByColumn: step_order
+
+	column icu_stays
+		dataType: int64
+		lineageTag: cc977f45-98cc-4580-927d-e2dd8dd59f04
+		summarizeBy: none
+		sourceColumn: icu_stays
+
+	column patients
+		dataType: int64
+		lineageTag: 9c8ca951-89e5-41e4-b5dd-1c442c621614
+		summarizeBy: none
+		sourceColumn: patients
+
+	column excluded
+		dataType: int64
+		lineageTag: c150d077-288d-4735-951d-53677b1dd74e
+		summarizeBy: none
+		sourceColumn: excluded
+
+	partition cohort_flow = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(DataFolder & "\cohort_flow.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Headers, {{"step_order", Int64.Type}, {"step", type text}, {"icu_stays", Int64.Type}, {"patients", Int64.Type}, {"excluded", Int64.Type}}, "en-US")
+				in
+					Typed
+

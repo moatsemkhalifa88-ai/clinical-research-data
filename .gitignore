@@ -1,0 +1,12 @@
+# Source data is under the PhysioNet ODbL licence: download it yourself, don't commit it
+data/raw/
+data/*.db
+# Re-identification key: never shared with researchers or committed
+data/restricted/
+__pycache__/
+.venv/
+# Extract is a derivative of licensed data: share the pipeline, not the rows
+data/extract/*.csv
+# Power BI project: local cache and per-user settings
+**/.pbi/
+bi/data/fact_patient.csv

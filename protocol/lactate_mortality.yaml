@@ -1,0 +1,56 @@
+# ------------------------------------------------------------------
+# Mock research proposal, as a researcher would submit it.
+# Every query in this project reads its parameters from this file,
+# so the extract matches the approved protocol exactly.
+# ------------------------------------------------------------------
+study_id: EMK-2026-014
+title: Early hyperlactatemia and in-hospital mortality in adult ICU patients
+principal_investigator: Dr. A. Researcher (fictional)
+approval: Helsinki committee approval (fictional) - de-identified extract only
+
+question: >
+  Is a high blood lactate in the first 24 hours of an ICU stay associated
+  with in-hospital mortality, after adjusting for age and sex?
+
+population:
+  min_age: 18
+  first_icu_stay_only: true          # one stay per patient, avoids repeated measures
+  min_icu_los_hours: 24              # needs a full first day of measurements
+  lab_window_hours_before_icu: 6     # labs taken up to 6h before ICU admission count
+  lab_window_hours_after_icu: 24
+
+exposure:
+  name: max_lactate_24h
+  lab_itemid: 50813                  # Lactate, blood gas (d_labitems)
+  unit: mmol/L
+  high_threshold: 2.0                # hyperlactatemia: > 2 mmol/L
+  plausible_range: [0.1, 30]
+
+covariates:
+  - age
+  - sex
+  - max_creatinine_24h
+
+labs:                                 # itemids from d_labitems, plausible ranges for validation
+  creatinine:
+    itemid: 50912
+    unit: mg/dL
+    plausible_range: [0.1, 25]
+
+outcomes:
+  primary: in_hospital_death         # admissions.hospital_expire_flag
+  secondary: death_within_30d        # patients.dod, from ICU admission (time to event)
+
+minimum_necessary_variables:          # only these leave the database
+  - study_id
+  - age
+  - sex
+  - admission_type
+  - first_careunit
+  - icu_los_days
+  - max_lactate_24h
+  - n_lactate_24h
+  - max_creatinine_24h
+  - in_hospital_death
+  - days_to_death_or_censor
+  - death_within_30d

@@ -1,0 +1,27 @@
+table dim_age_band
+	lineageTag: 7b38793c-580a-40c9-8a39-7e79221e85ab
+
+	column age_band
+		dataType: string
+		lineageTag: 0e6f0e71-7f85-43f7-b9b1-884c5c63cd02
+		summarizeBy: none
+		sourceColumn: age_band
+		sortByColumn: sort_order
+
+	column sort_order
+		dataType: int64
+		isHidden
+		lineageTag: 8f567c56-13a6-4d87-9c2f-c6a0ef971a5f
+		summarizeBy: none
+		sourceColumn: sort_order
+
+	partition dim_age_band = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(DataFolder & "\dim_age_band.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Headers, {{"age_band", type text}, {"sort_order", Int64.Type}}, "en-US")
+				in
+					Typed
+

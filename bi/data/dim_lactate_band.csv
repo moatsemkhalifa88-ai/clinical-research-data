@@ -1,0 +1,4 @@
+﻿lactate_band,sort_order,meaning,range_mmol_l
+≤ 2,1,Normal,0–2
+2–4,2,Raised,2–4
+> 4,3,Severe,> 4

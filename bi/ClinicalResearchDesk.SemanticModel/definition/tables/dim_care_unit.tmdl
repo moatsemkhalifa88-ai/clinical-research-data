@@ -1,0 +1,25 @@
+table dim_care_unit
+	lineageTag: 0d68722b-4c93-49ce-b0cb-f59758527d94
+
+	column care_unit
+		dataType: string
+		lineageTag: 39539e56-c934-44f7-b6b6-a8bb0fc65a1e
+		summarizeBy: none
+		sourceColumn: care_unit
+
+	column care_unit_name
+		dataType: string
+		lineageTag: 31a14972-d809-4344-9df2-e7df11fc329d
+		summarizeBy: none
+		sourceColumn: care_unit_name
+
+	partition dim_care_unit = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(DataFolder & "\dim_care_unit.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Headers, {{"care_unit", type text}, {"care_unit_name", type text}}, "en-US")
+				in
+					Typed
+

@@ -1,0 +1,62 @@
+table validation_checks
+	lineageTag: c9a6eca3-813f-4c18-b6f2-fa61ba677e74
+
+	measure Checks = COUNTROWS ( validation_checks )
+		formatString: 0
+		lineageTag: e4dfa87f-cf05-4c90-8a0f-5a9aa38d1b3f
+
+	measure 'Checks Passed' = CALCULATE ( [Checks], validation_checks[status] = "PASS" ) + 0
+		formatString: 0
+		lineageTag: dfe307e8-da40-4901-8e8f-5e9e9eb14324
+
+	measure 'Checks Warned' = CALCULATE ( [Checks], validation_checks[status] = "WARN" ) + 0
+		formatString: 0
+		lineageTag: 429f95e1-77e9-43ff-ad1d-c91b3491d410
+
+	measure 'Checks Failed' = CALCULATE ( [Checks], validation_checks[status] = "FAIL" ) + 0
+		formatString: 0
+		lineageTag: 642c7c70-08a3-4986-8acb-957708f19d08
+
+	measure 'Release Decision' = IF ( [Checks Failed] = 0, "READY TO RELEASE", "BLOCKED" )
+		lineageTag: e3a64338-067a-479c-9dc3-2dcfad9de1ff
+
+	column layer
+		dataType: string
+		lineageTag: 7164df64-bd17-40cd-a080-1a605a5795ae
+		summarizeBy: none
+		sourceColumn: layer
+
+	column area
+		dataType: string
+		lineageTag: 8556838a-1abb-481e-ac1d-e503d407fc68
+		summarizeBy: none
+		sourceColumn: area
+
+	column check_name
+		dataType: string
+		lineageTag: 23260623-6c4b-458a-976c-792a901ddf8c
+		summarizeBy: none
+		sourceColumn: check_name
+
+	column problems
+		dataType: int64
+		lineageTag: 2d91f5d0-6d8e-4063-a05d-d75d61e5a58a
+		summarizeBy: none
+		sourceColumn: problems
+
+	column status
+		dataType: string
+		lineageTag: f844b493-854c-4285-9ed4-3f5d01cabf9e
+		summarizeBy: none
+		sourceColumn: status
+
+	partition validation_checks = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(DataFolder & "\validation_checks.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Headers, {{"layer", type text}, {"area", type text}, {"check_name", type text}, {"problems", Int64.Type}, {"status", type text}}, "en-US")
+				in
+					Typed
+

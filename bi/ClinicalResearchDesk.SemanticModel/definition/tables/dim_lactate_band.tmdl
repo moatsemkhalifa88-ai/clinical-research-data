@@ -1,0 +1,39 @@
+table dim_lactate_band
+	lineageTag: 3c8839a3-bb13-405f-a553-51a5bd3ba4e9
+
+	column lactate_band
+		dataType: string
+		lineageTag: 8dc797a5-e9f6-4a15-8812-5576373376e5
+		summarizeBy: none
+		sourceColumn: lactate_band
+		sortByColumn: sort_order
+
+	column sort_order
+		dataType: int64
+		isHidden
+		lineageTag: b5263f44-3276-4063-ab96-2896a65bbdac
+		summarizeBy: none
+		sourceColumn: sort_order
+
+	column meaning
+		dataType: string
+		lineageTag: c76a678c-cb9b-412f-8185-1dc2d2198b24
+		summarizeBy: none
+		sourceColumn: meaning
+
+	column range_mmol_l
+		dataType: string
+		lineageTag: a50e8749-0da8-4ba4-b42c-a4e002684f9f
+		summarizeBy: none
+		sourceColumn: range_mmol_l
+
+	partition dim_lactate_band = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(DataFolder & "\dim_lactate_band.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Headers, {{"lactate_band", type text}, {"sort_order", Int64.Type}, {"meaning", type text}, {"range_mmol_l", type text}}, "en-US")
+				in
+					Typed
+

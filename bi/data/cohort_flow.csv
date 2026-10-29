@@ -1,0 +1,6 @@
+﻿step_order,step,icu_stays,patients,excluded
+1,All ICU stays in the database,140,100,0
+2,Age >= 18,140,100,0
+3,First ICU stay of the patient,100,100,40
+4,ICU length of stay >= 24 h,85,85,15
+5,Lactate measured (-6 h to +24 h),67,67,18

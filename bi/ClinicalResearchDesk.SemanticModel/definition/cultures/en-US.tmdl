@@ -1,0 +1,242 @@
+cultureInfo en-US
+
+	linguisticMetadata =
+			{
+			  "Version": "2.0.0",
+			  "Language": "en-US",
+			  "Entities": {
+			    "dim_lactate_band.lactate_band": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "dim_lactate_band",
+			          "ConceptualProperty": "lactate_band"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Lactate (mmol/L)": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "dim_lactate_band.meaning": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "dim_lactate_band",
+			          "ConceptualProperty": "meaning"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Level": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "fact_patient.mortality_": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "fact_patient",
+			          "ConceptualProperty": "Mortality %"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "In-hospital mortality": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "fact_patient.column30day_mortality_": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "fact_patient",
+			          "ConceptualProperty": "30-day Mortality %"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "30-day mortality": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "fact_patient.study_id": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "fact_patient",
+			          "ConceptualProperty": "study_id"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Patient": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "fact_patient.in_hospital_death": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "fact_patient",
+			          "ConceptualProperty": "in_hospital_death"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Died in hospital": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "validation_checks.area": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "validation_checks",
+			          "ConceptualProperty": "area"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Area": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "validation_checks.status": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "validation_checks",
+			          "ConceptualProperty": "status"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Result": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "validation_checks.layer": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "validation_checks",
+			          "ConceptualProperty": "layer"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Layer": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "validation_checks.check_name": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "validation_checks",
+			          "ConceptualProperty": "check_name"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Check": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "validation_checks.problems": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "validation_checks",
+			          "ConceptualProperty": "problems"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "Rows with problems": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    }
+			  }
+			}
+		contentType: json
+

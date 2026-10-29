@@ -1,0 +1,12 @@
+relationship rel_lactate_band
+	fromColumn: fact_patient.lactate_band
+	toColumn: dim_lactate_band.lactate_band
+
+relationship rel_age_band
+	fromColumn: fact_patient.age_band
+	toColumn: dim_age_band.age_band
+
+relationship rel_care_unit
+	fromColumn: fact_patient.care_unit
+	toColumn: dim_care_unit.care_unit
+

@@ -1,0 +1,50 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "q_title",
+  "position": {
+    "x": 24,
+    "y": 12,
+    "z": 1,
+    "height": 96,
+    "width": 1872,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Data quality & cohort selection",
+                    "textStyle": {
+                      "fontSize": "22pt",
+                      "fontWeight": "bold",
+                      "color": "#1F3864"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "26 automated checks run on the source database and the delivered extract before release · any FAIL blocks the extract",
+                    "textStyle": {
+                      "fontSize": "11pt",
+                      "fontWeight": "normal",
+                      "color": "#5F6B7A"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "title",
+  "position": {
+    "x": 24,
+    "y": 12,
+    "z": 1,
+    "height": 96,
+    "width": 1300,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Clinical Research Data Desk · Study EMK-2026-014",
+                    "textStyle": {
+                      "fontSize": "22pt",
+                      "fontWeight": "bold",
+                      "color": "#1F3864"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "Early lactate and in-hospital mortality in adult ICU patients · MIMIC-IV Demo v2.2, de-identified extract · mock study for portfolio use",
+                    "textStyle": {
+                      "fontSize": "11pt",
+                      "fontWeight": "normal",
+                      "color": "#5F6B7A"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

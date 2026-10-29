@@ -1,0 +1,240 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "band_table",
+  "position": {
+    "x": 660,
+    "y": 686,
+    "z": 0,
+    "height": 370,
+    "width": 620,
+    "tabOrder": 14
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_lactate_band"
+                    }
+                  },
+                  "Property": "lactate_band"
+                }
+              },
+              "queryRef": "dim_lactate_band.lactate_band",
+              "nativeQueryRef": "lactate_band",
+              "displayName": "Lactate (mmol/L)"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_lactate_band"
+                    }
+                  },
+                  "Property": "meaning"
+                }
+              },
+              "queryRef": "dim_lactate_band.meaning",
+              "nativeQueryRef": "meaning",
+              "displayName": "Level"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_patient"
+                    }
+                  },
+                  "Property": "Patients"
+                }
+              },
+              "queryRef": "fact_patient.Patients",
+              "nativeQueryRef": "Patients"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_patient"
+                    }
+                  },
+                  "Property": "Deaths"
+                }
+              },
+              "queryRef": "fact_patient.Deaths",
+              "nativeQueryRef": "Deaths"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_patient"
+                    }
+                  },
+                  "Property": "Mortality %"
+                }
+              },
+              "queryRef": "fact_patient.Mortality %",
+              "nativeQueryRef": "Mortality %",
+              "displayName": "In-hospital mortality"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_patient"
+                    }
+                  },
+                  "Property": "30-day Mortality %"
+                }
+              },
+              "queryRef": "fact_patient.30-day Mortality %",
+              "nativeQueryRef": "30-day Mortality %",
+              "displayName": "30-day mortality"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#D6DCE5'"
+                    }
+                  }
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "8D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "dropShadow": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Outcomes by lactate band'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#1F3864'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

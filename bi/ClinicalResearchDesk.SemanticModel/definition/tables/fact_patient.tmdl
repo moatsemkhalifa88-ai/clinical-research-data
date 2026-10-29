@@ -1,0 +1,158 @@
+table fact_patient
+	lineageTag: 9dd24582-3104-4878-b785-b7d8c5cbd19f
+
+	measure Patients = COUNTROWS ( fact_patient )
+		formatString: 0
+		lineageTag: ce0851ab-475d-472b-a091-6208b5f6e0d9
+
+	measure Deaths = SUM ( fact_patient[in_hospital_death] ) + 0
+		formatString: 0
+		lineageTag: 5baf7834-138c-44c1-a994-709edf2e586e
+
+	measure 'Mortality %' = DIVIDE ( [Deaths], [Patients] )
+		formatString: 0.0%
+		lineageTag: 86a2e4d7-5185-4a29-b291-80db251cc381
+
+	measure '30-day Deaths' = SUM ( fact_patient[death_within_30d] ) + 0
+		formatString: 0
+		lineageTag: 96707902-412b-4e6a-b5e8-1c6af9979ddd
+
+	measure '30-day Mortality %' = DIVIDE ( [30-day Deaths], [Patients] )
+		formatString: 0.0%
+		lineageTag: a3f4f578-4e05-41ce-8881-21202112826d
+
+	measure 'Median Max Lactate' = MEDIAN ( fact_patient[max_lactate_24h] )
+		formatString: 0.0
+		lineageTag: 1c2ea863-d3ef-4909-ad4d-1e5e7bb24103
+
+	measure 'Median ICU LOS (days)' = MEDIAN ( fact_patient[icu_los_days] )
+		formatString: 0.0
+		lineageTag: 0cc979ba-c91e-4ff2-8670-dff0c99878aa
+
+	measure 'Median Age' = MEDIAN ( fact_patient[age] )
+		formatString: 0
+		lineageTag: e98ba620-dd78-45a6-a77c-4427733e25fd
+
+	measure 'High Lactate Share' = DIVIDE ( CALCULATE ( [Patients], fact_patient[high_lactate] = 1 ), [Patients] )
+		formatString: 0%
+		lineageTag: 417404cb-e2a4-4419-936d-e68d3b7e6c6f
+
+	measure 'Mortality - High Lactate' = CALCULATE ( [Mortality %], fact_patient[high_lactate] = 1 )
+		formatString: 0.0%
+		lineageTag: 67064224-4ab2-45a4-9f61-8cb3f58c6399
+
+	measure 'Mortality - Normal Lactate' = CALCULATE ( [Mortality %], fact_patient[high_lactate] = 0 )
+		formatString: 0.0%
+		lineageTag: 3432d98a-f324-4462-9328-109d5b7fdeca
+
+	measure 'Risk Ratio (High vs Normal)' = DIVIDE ( [Mortality - High Lactate], [Mortality - Normal Lactate] )
+		formatString: 0.00
+		lineageTag: d3510312-7ce7-46fa-9102-19f53afd7981
+
+	measure 'Sample Size Note' = VAR d = [Deaths] RETURN IF ( d < 5, "Caution: only " & d & " deaths in this selection - too few for firm conclusions", d & " deaths in this selection" )
+		lineageTag: d8228163-4adb-4306-804c-9e98e5cb8c97
+
+	column study_id
+		dataType: string
+		isHidden
+		lineageTag: fb95e6e5-f7f7-4702-b9d4-473de88fa8bf
+		summarizeBy: none
+		sourceColumn: study_id
+
+	column age
+		dataType: int64
+		lineageTag: 729e126f-b5f7-49df-a466-127d6cb69359
+		summarizeBy: none
+		sourceColumn: age
+
+	column age_band
+		dataType: string
+		isHidden
+		lineageTag: 69392810-08cf-4cda-ac73-43672926143c
+		summarizeBy: none
+		sourceColumn: age_band
+
+	column sex
+		dataType: string
+		lineageTag: 0f19225a-85e2-472d-a88b-14a58c68ba1a
+		summarizeBy: none
+		sourceColumn: sex
+
+	column admission_group
+		dataType: string
+		lineageTag: 0e6bca01-4752-42cb-866d-d9d293f7057e
+		summarizeBy: none
+		sourceColumn: admission_group
+
+	column care_unit
+		dataType: string
+		isHidden
+		lineageTag: a202e9e1-3ecc-4547-aa5f-ceb15bf0adca
+		summarizeBy: none
+		sourceColumn: care_unit
+
+	column icu_los_days
+		dataType: double
+		lineageTag: 3e969858-d38f-414f-bf9d-d16e1f7b34c4
+		summarizeBy: none
+		sourceColumn: icu_los_days
+
+	column max_lactate_24h
+		dataType: double
+		lineageTag: 5962bf44-777f-4bc5-b5cc-9c5fb24c00a8
+		summarizeBy: none
+		sourceColumn: max_lactate_24h
+
+	column lactate_band
+		dataType: string
+		isHidden
+		lineageTag: fa6d3a5b-7a02-48ab-9b5c-119559687a39
+		summarizeBy: none
+		sourceColumn: lactate_band
+
+	column high_lactate
+		dataType: int64
+		lineageTag: e867f8ba-0855-4358-ace5-81be1c5d3b68
+		summarizeBy: none
+		sourceColumn: high_lactate
+
+	column n_lactate_24h
+		dataType: int64
+		lineageTag: 5af0cd97-fa1b-43db-b571-bdf54f66c947
+		summarizeBy: none
+		sourceColumn: n_lactate_24h
+
+	column max_creatinine_24h
+		dataType: double
+		lineageTag: 5dea9e49-1d04-443e-be21-e979ce8e5826
+		summarizeBy: none
+		sourceColumn: max_creatinine_24h
+
+	column in_hospital_death
+		dataType: int64
+		lineageTag: 752d2127-3a5a-4ab3-a931-4feea546e578
+		summarizeBy: none
+		sourceColumn: in_hospital_death
+
+	column death_within_30d
+		dataType: int64
+		lineageTag: bffb5cb2-6a4b-4462-8f2e-2fdd29de4aff
+		summarizeBy: none
+		sourceColumn: death_within_30d
+
+	column days_to_death_or_censor
+		dataType: double
+		lineageTag: 4dd2a729-70cf-4b30-ac66-316fdfd3dc6b
+		summarizeBy: none
+		sourceColumn: days_to_death_or_censor
+
+	partition fact_patient = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(File.Contents(DataFolder & "\fact_patient.csv"), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+					Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+					Typed = Table.TransformColumnTypes(Headers, {{"study_id", type text}, {"age", Int64.Type}, {"age_band", type text}, {"sex", type text}, {"admission_group", type text}, {"care_unit", type text}, {"icu_los_days", type number}, {"max_lactate_24h", type number}, {"lactate_band", type text}, {"high_lactate", Int64.Type}, {"n_lactate_24h", Int64.Type}, {"max_creatinine_24h", type number}, {"in_hospital_death", Int64.Type}, {"death_within_30d", Int64.Type}, {"days_to_death_or_censor", type number}}, "en-US")
+				in
+					Typed
+
