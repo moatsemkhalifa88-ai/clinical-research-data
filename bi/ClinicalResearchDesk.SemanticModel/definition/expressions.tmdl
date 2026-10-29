@@ -2,3 +2,4 @@ expression DataFolder = "C:\Users\moats\Desktop\clinical-research-data\bi\data" 
 	lineageTag: 6f1c2a4e-0d3b-4c8e-9a51-2b7d8e4f1a10
 
 	annotation PBI_ResultType = Text
+

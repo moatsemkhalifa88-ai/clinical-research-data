@@ -11,7 +11,7 @@ annotation __PBI_TimeIntelligenceEnabled = 1
 
 annotation PBI_ProTooling = ["TMDLView_Desktop","DevMode"]
 
-annotation PBI_QueryOrder = ["fact_patient","dim_lactate_band","dim_age_band","dim_care_unit","cohort_flow","validation_checks"]
+annotation PBI_QueryOrder = ["fact_patient","dim_lactate_band","dim_age_band","dim_care_unit","cohort_flow","validation_checks","DataFolder"]
 
 ref table fact_patient
 ref table dim_lactate_band

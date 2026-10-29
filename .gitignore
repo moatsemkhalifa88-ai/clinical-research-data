@@ -10,3 +10,4 @@ data/extract/*.csv
 # Power BI project: local cache and per-user settings
 **/.pbi/
 bi/data/fact_patient.csv
+**/TMDLScripts/
