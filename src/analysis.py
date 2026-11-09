@@ -17,7 +17,7 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 
-from common import EXTRACT_DIR, FIGURES, REPORTS, he, load_protocol, md_table, rtl
+from common import EXTRACT_DIR, FIGURES, FIGURES_EN, REPORTS, he, load_protocol, md_table, protocol_text, rtl
 from stats_utils import kaplan_meier, logistic, logrank, wilson
 
 NAVY, RED, GREY = "#1f3864", "#c0392b", "#7f8c8d"
@@ -25,6 +25,45 @@ NAVY, RED, GREY = "#1f3864", "#c0392b", "#7f8c8d"
 LABELS = {"high_lactate": "לקטט מעל הסף", "lactate_per_mmol": "לקטט (לכל 1 mmol/L)",
           "age_per_10y": "גיל (לכל 10 שנים)", "female": "מין נקבה"}
 METHODS = {"Maximum likelihood": "נראות מרבית", "Firth penalised": "Firth"}
+
+# Figure text per language. Hebrew figures are the default (reports/figures/);
+# English copies go to reports/figures/en/ for README.en.md.
+FIG_TEXT = {
+    "he": {
+        "bands_x": "הלקטט הגבוה ביותר ב-24 השעות הראשונות בטיפול נמרץ (mmol/L)",
+        "bands_y": "תמותה באשפוז (%)",
+        "bands_title": "תמותה באשפוז לפי רמת הלקטט המוקדמת (רווח סמך 95% לפי Wilson)",
+        "km_low": "לקטט ≤ {thr} (n={n})", "km_high": "לקטט > {thr} (n={n})",
+        "km_x": "ימים מהקבלה לטיפול נמרץ", "km_y": "הישרדות (%)",
+        "km_title": "הישרדות 30 יום לפי רמת הלקטט המוקדמת (log-rank p = {p})",
+        "forest_x": "יחס סיכויים (OR) לפטירה באשפוז (סקאלה לוגריתמית, רווח סמך 95%)",
+        "forest_title": "מודל מתוקנן ({method}) · {n} מטופלים · {events} אירועים",
+        "labels": LABELS, "methods": METHODS,
+    },
+    "en": {
+        "bands_x": "Highest lactate in first 24 h of ICU (mmol/L)",
+        "bands_y": "In-hospital mortality (%)",
+        "bands_title": "In-hospital mortality by early lactate (95% Wilson CI)",
+        "km_low": "Lactate <= {thr} (n={n})", "km_high": "Lactate > {thr} (n={n})",
+        "km_x": "Days from ICU admission", "km_y": "Survival (%)",
+        "km_title": "30-day survival by early lactate (log-rank p = {p})",
+        "forest_x": "Odds ratio for in-hospital death (log scale, 95% CI)",
+        "forest_title": "Adjusted model ({method}, n={n}, events={events})",
+        "labels": {"high_lactate": "Lactate > threshold", "lactate_per_mmol": "Lactate (per 1 mmol/L)",
+                   "age_per_10y": "Age (per 10 years)", "female": "Female sex"},
+        "methods": {"Maximum likelihood": "Maximum likelihood", "Firth penalised": "Firth penalised"},
+    },
+}
+
+
+def figure_paths(name: str) -> dict:
+    return {"he": FIGURES / name, "en": FIGURES_EN / name}
+
+
+def fig_text(lang: str, key: str, **kw) -> str:
+    """Figure string in the given language, ready for matplotlib."""
+    text = FIG_TEXT[lang][key].format(**kw)
+    return he(text) if lang == "he" else text
 
 
 def fmt_median(s: pd.Series) -> str:
@@ -69,7 +108,7 @@ def table_one(df: pd.DataFrame, thr: float) -> pd.DataFrame:
 BAND_COL = "טווח לקטט (mmol/L)"
 
 
-def fig_lactate_bands(df: pd.DataFrame, path) -> pd.DataFrame:
+def fig_lactate_bands(df: pd.DataFrame, paths: dict) -> pd.DataFrame:
     bands = pd.cut(df.max_lactate_24h, [0, 2, 4, np.inf], labels=["≤ 2", "2-4", "> 4"])
     rows = []
     for band in bands.cat.categories:
@@ -81,50 +120,57 @@ def fig_lactate_bands(df: pd.DataFrame, path) -> pd.DataFrame:
                      "רווח סמך 95%": f"{100*lo:.0f}-{100*hi:.0f}%" if n else "-", "_p": k / n if n else np.nan,
                      "_lo": lo, "_hi": hi, "_n": n})
     t = pd.DataFrame(rows)
-    fig, ax = plt.subplots(figsize=(6, 4))
     x = np.arange(len(t))
-    ax.bar(x, 100 * t._p, color=[NAVY, "#e67e22", RED], width=0.6)
-    ax.errorbar(x, 100 * t._p, yerr=[100 * (t._p - t._lo), 100 * (t._hi - t._p)], fmt="none", ecolor="black", capsize=5, lw=1)
-    for i, r in t.iterrows():
-        ax.text(i, 2, f"n={r._n}", ha="center", color="white", fontsize=9, weight="bold")
-    ax.set_xticks(x, t[BAND_COL])
-    ax.set_xlabel(he("הלקטט הגבוה ביותר ב-24 השעות הראשונות בטיפול נמרץ (mmol/L)"))
-    ax.set_ylabel(he("תמותה באשפוז (%)"))
-    ax.set_title(he("תמותה באשפוז לפי רמת הלקטט המוקדמת (רווח סמך 95% לפי Wilson)"))
-    ax.spines[["top", "right"]].set_visible(False)
-    fig.tight_layout(); fig.savefig(path, dpi=150); plt.close(fig)
+    for lang, path in paths.items():
+        fig, ax = plt.subplots(figsize=(6, 4))
+        ax.bar(x, 100 * t._p, color=[NAVY, "#e67e22", RED], width=0.6)
+        ax.errorbar(x, 100 * t._p, yerr=[100 * (t._p - t._lo), 100 * (t._hi - t._p)], fmt="none", ecolor="black", capsize=5, lw=1)
+        for i, r in t.iterrows():
+            ax.text(i, 2, f"n={r._n}", ha="center", color="white", fontsize=9, weight="bold")
+        ax.set_xticks(x, t[BAND_COL])
+        ax.set_xlabel(fig_text(lang, "bands_x"))
+        ax.set_ylabel(fig_text(lang, "bands_y"))
+        ax.set_title(fig_text(lang, "bands_title"))
+        ax.spines[["top", "right"]].set_visible(False)
+        fig.tight_layout(); fig.savefig(path, dpi=150); plt.close(fig)
     return t[[c for c in t.columns if not c.startswith("_")]]
 
 
-def fig_km(df: pd.DataFrame, thr: float, path) -> tuple[float, float]:
-    fig, ax = plt.subplots(figsize=(6.5, 4.2))
-    for grp, colour, label in [(0, NAVY, f"לקטט ≤ {thr}"), (1, RED, f"לקטט > {thr}")]:
-        sub = df[df.high_lactate == grp]
-        km = kaplan_meier(sub.days_to_death_or_censor, sub.death_within_30d)
-        km = pd.concat([km, pd.DataFrame([{**km.iloc[-1].to_dict(), "time": 30.0}])])
-        ax.step(km.time, 100 * km.survival, where="post", color=colour, lw=2, label=he(f"{label} (n={len(sub)})"))
-        ax.fill_between(km.time, 100 * km.ci_low, 100 * km.ci_high, step="post", color=colour, alpha=0.12)
+def fig_km(df: pd.DataFrame, thr: float, paths: dict) -> tuple[float, float]:
     chi2, p = logrank(df.days_to_death_or_censor, df.death_within_30d, df.high_lactate)
-    ax.set_xlim(0, 30); ax.set_ylim(0, 102)
-    ax.set_xlabel(he("ימים מהקבלה לטיפול נמרץ")); ax.set_ylabel(he("הישרדות (%)"))
-    ax.set_title(he(f"הישרדות 30 יום לפי רמת הלקטט המוקדמת (log-rank p = {fmt_p(p)})"))
-    ax.legend(loc="lower left", frameon=False)
-    ax.spines[["top", "right"]].set_visible(False)
-    fig.tight_layout(); fig.savefig(path, dpi=150); plt.close(fig)
+    for lang, path in paths.items():
+        fig, ax = plt.subplots(figsize=(6.5, 4.2))
+        for grp, colour, key in [(0, NAVY, "km_low"), (1, RED, "km_high")]:
+            sub = df[df.high_lactate == grp]
+            km = kaplan_meier(sub.days_to_death_or_censor, sub.death_within_30d)
+            km = pd.concat([km, pd.DataFrame([{**km.iloc[-1].to_dict(), "time": 30.0}])])
+            ax.step(km.time, 100 * km.survival, where="post", color=colour, lw=2,
+                    label=fig_text(lang, key, thr=thr, n=len(sub)))
+            ax.fill_between(km.time, 100 * km.ci_low, 100 * km.ci_high, step="post", color=colour, alpha=0.12)
+        ax.set_xlim(0, 30); ax.set_ylim(0, 102)
+        ax.set_xlabel(fig_text(lang, "km_x")); ax.set_ylabel(fig_text(lang, "km_y"))
+        ax.set_title(fig_text(lang, "km_title", p=fmt_p(p)))
+        ax.legend(loc="lower left", frameon=False)
+        ax.spines[["top", "right"]].set_visible(False)
+        fig.tight_layout(); fig.savefig(path, dpi=150); plt.close(fig)
     return chi2, p
 
 
-def fig_forest(res, path) -> None:
+def fig_forest(res, paths: dict) -> None:
     t = res.table[res.table.term != "(intercept)"].iloc[::-1]
-    fig, ax = plt.subplots(figsize=(6.5, 0.6 * len(t) + 1.2))
     y = np.arange(len(t))
-    ax.errorbar(t.OR, y, xerr=[t.OR - t["CI low"], t["CI high"] - t.OR], fmt="o", color=NAVY, capsize=4)
-    ax.axvline(1, color=GREY, ls="--", lw=1)
-    ax.set_xscale("log"); ax.set_yticks(y, [he(LABELS[term]) for term in t.term])
-    ax.set_xlabel(he("יחס סיכויים (OR) לפטירה באשפוז (סקאלה לוגריתמית, רווח סמך 95%)"))
-    ax.set_title(he(f"מודל מתוקנן ({METHODS[res.method]}) · {res.n} מטופלים · {res.events} אירועים"), fontsize=10)
-    ax.spines[["top", "right"]].set_visible(False)
-    fig.tight_layout(); fig.savefig(path, dpi=150); plt.close(fig)
+    for lang, path in paths.items():
+        txt = FIG_TEXT[lang]
+        fig, ax = plt.subplots(figsize=(6.5, 0.6 * len(t) + 1.2))
+        ax.errorbar(t.OR, y, xerr=[t.OR - t["CI low"], t["CI high"] - t.OR], fmt="o", color=NAVY, capsize=4)
+        ax.axvline(1, color=GREY, ls="--", lw=1)
+        ticks = [txt["labels"][term] for term in t.term]
+        ax.set_xscale("log"); ax.set_yticks(y, [he(s) for s in ticks] if lang == "he" else ticks)
+        ax.set_xlabel(fig_text(lang, "forest_x"))
+        ax.set_title(fig_text(lang, "forest_title", method=txt["methods"][res.method], n=res.n, events=res.events),
+                     fontsize=10)
+        ax.spines[["top", "right"]].set_visible(False)
+        fig.tight_layout(); fig.savefig(path, dpi=150); plt.close(fig)
 
 
 def or_table(res) -> pd.DataFrame:
@@ -142,18 +188,18 @@ def run() -> dict:
     df["female"] = df.sex.eq("F").astype(int)
     df["age_per_10y"] = df.age / 10
     df["lactate_per_mmol"] = df.max_lactate_24h
-    FIGURES.mkdir(parents=True, exist_ok=True)
+    FIGURES_EN.mkdir(parents=True, exist_ok=True)
 
     t1 = table_one(df, thr)
-    bands = fig_lactate_bands(df, FIGURES / "mortality_by_lactate.png")
-    chi2, p_lr = fig_km(df, thr, FIGURES / "km_30day.png")
+    bands = fig_lactate_bands(df, figure_paths("mortality_by_lactate.png"))
+    chi2, p_lr = fig_km(df, thr, figure_paths("km_30day.png"))
 
     unadj = logistic(df, "in_hospital_death", ["high_lactate"])
     full_terms = ["high_lactate", "age_per_10y", "female"]
     adj_ml = logistic(df, "in_hospital_death", full_terms)
     adj_firth = logistic(df, "in_hospital_death", full_terms, firth=True)
     cont_firth = logistic(df, "in_hospital_death", ["lactate_per_mmol", "age_per_10y", "female"], firth=True)
-    fig_forest(adj_firth, FIGURES / "forest_adjusted.png")
+    fig_forest(adj_firth, figure_paths("forest_adjusted.png"))
 
     events = int(df.in_hospital_death.sum())
     or_main = adj_firth.table.set_index("term").loc["high_lactate"]
@@ -162,7 +208,7 @@ def run() -> dict:
     significance = "מובהק סטטיסטית ברמה של 0.05" if p_lr < 0.05 else "לא מובהק סטטיסטית ברמה של 0.05"
     report = f"""# ניתוח סטטיסטי (Analysis) - {protocol['study_id']}
 
-**שאלת המחקר:** {protocol['question'].strip()}
+**שאלת המחקר:** {protocol_text(protocol, 'question')}
 
 **נתונים:** קובץ חילוץ לאחר הסרת מזהים (De-identified extract) `{protocol['study_id']}_extract.csv`
 ({len(df)} מטופלים, {events} פטירות באשפוז).

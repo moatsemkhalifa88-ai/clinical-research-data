@@ -8,7 +8,7 @@ It reproduces the work of a hospital research-data analyst: a researcher submits
 
 **Data:** [MIMIC-IV Clinical Database Demo v2.2](https://physionet.org/content/mimic-iv-demo/2.2/) – 100 de-identified ICU patients from Beth Israel Deaconess Medical Center (275 admissions, 140 ICU stays, 107,727 lab results).
 
-![Power BI dashboard - study overview](reports/figures/powerbi_overview.png)
+![Power BI dashboard - study overview](reports/figures/en/powerbi_overview.png)
 
 ---
 
@@ -36,9 +36,9 @@ The whole protocol (inclusion criteria, lab item IDs, time windows, plausible ra
 - **Validation:** 0 failures. One documented warning: 14 ICU stays end up to 27 h after hospital discharge (a documentation lag that does not affect the first-24 h window).
 
 <p>
-  <img src="reports/figures/cohort_flow.png" width="32%">
-  <img src="reports/figures/mortality_by_lactate.png" width="32%">
-  <img src="reports/figures/km_30day.png" width="32%">
+  <img src="reports/figures/en/cohort_flow.png" width="32%">
+  <img src="reports/figures/en/mortality_by_lactate.png" width="32%">
+  <img src="reports/figures/en/km_30day.png" width="32%">
 </p>
 
 ## Power BI dashboard
@@ -51,7 +51,7 @@ A two-page report built as a **Power BI Project (PBIP)**, so the model and every
 - **Page 1, Study overview:** KPIs, mortality by lactate band and age band, lactate vs ICU stay per patient, outcomes table, slicers for sex, admission type and ICU unit.
 - **Page 2, Data quality:** all 26 validation checks, pass/warn/fail by area, the cohort funnel (100 → 67) and the release decision.
 
-![Power BI dashboard - data quality](reports/figures/powerbi_quality.png)
+![Power BI dashboard - data quality](reports/figures/en/powerbi_quality.png)
 
 ## Design decisions
 

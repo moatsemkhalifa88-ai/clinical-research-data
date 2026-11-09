@@ -2,7 +2,7 @@
 
 # ניתוח סטטיסטי (Analysis) - EMK-2026-014
 
-**שאלת המחקר:** Is a high blood lactate in the first 24 hours of an ICU stay associated with in-hospital mortality, after adjusting for age and sex?
+**שאלת המחקר:** האם רמת לקטט גבוהה בדם ב-24 השעות הראשונות של שהייה בטיפול נמרץ קשורה לתמותה במהלך האשפוז, לאחר תקנון לגיל ולמין?
 
 **נתונים:** קובץ חילוץ לאחר הסרת מזהים (De-identified extract) `EMK-2026-014_extract.csv`
 (67 מטופלים, 7 פטירות באשפוז).

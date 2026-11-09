@@ -3,10 +3,11 @@ Hebrew text for matplotlib."""
 from __future__ import annotations
 
 import sqlite3
+from functools import lru_cache
 from pathlib import Path
 
 import matplotlib
-import matplotlib.ft2font
+import numpy as np
 import pandas as pd
 import yaml
 from bidi.algorithm import get_display
@@ -15,28 +16,54 @@ from bidi.algorithm import get_display
 # render the same on every machine (and in CI).
 matplotlib.rcParams["font.family"] = "DejaVu Sans"
 
-# matplotlib >= 3.11 lays text out with libraqm, which applies the bidi algorithm
-# itself. Reordering on top of that would reverse the Hebrew a second time.
-MPL_HAS_BIDI = bool(getattr(matplotlib.ft2font, "__libraqm_version__", None))
+
+def ink_centre(text: str) -> float:
+    """Render `text` with matplotlib and return where its ink sits, from
+    0 (left edge of the drawn text) to 1 (right edge)."""
+    from matplotlib.backends.backend_agg import FigureCanvasAgg
+    from matplotlib.figure import Figure
+
+    fig = Figure(figsize=(2, 1), dpi=100, facecolor="white")
+    canvas = FigureCanvasAgg(fig)
+    fig.text(0.5, 0.5, text, ha="center", va="center", fontsize=36, color="black")
+    canvas.draw()
+    cols = (255 - np.asarray(canvas.buffer_rgba())[..., 0].astype(float)).sum(axis=0)
+    xs = np.nonzero(cols)[0]
+    centre = (cols * np.arange(len(cols))).sum() / cols.sum()
+    return (centre - xs[0]) / (xs[-1] - xs[0])
+
+
+@lru_cache(maxsize=1)
+def mpl_renders_rtl() -> bool:
+    """Does this matplotlib lay out Hebrew right to left on its own?
+
+    Checked by rendering, not by version: draw "מי" (a wide mem, then a narrow
+    yod) and "ימ" (the same letters reversed). If matplotlib applies the bidi
+    algorithm, the first letter is drawn on the right, so the ink of "מי" sits
+    further right than the ink of "ימ". Without bidi it is the other way round.
+    """
+    return ink_centre("מי") > ink_centre("ימ")
 
 
 def he(text: str) -> str:
     """Hebrew text for matplotlib, displayed right to left.
 
-    Older matplotlib draws characters strictly left to right, so the text is
-    reordered with python-bidi; newer matplotlib (libraqm) does it natively.
+    If matplotlib already lays out right-to-left text (e.g. builds with libraqm),
+    the text is returned as is; otherwise it is reordered with python-bidi.
     Use ONLY for strings passed to matplotlib. Markdown (GitHub) and Power BI
     apply the bidi algorithm themselves; reordering there would reverse the text.
     """
     text = str(text)
-    if MPL_HAS_BIDI:
+    if mpl_renders_rtl():
         return text
     return "\n".join(get_display(line) for line in text.split("\n"))
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DB_PATH = ROOT / "data" / "mimic_demo.db"
 REPORTS = ROOT / "reports"
-FIGURES = REPORTS / "figures"
+FIGURES = REPORTS / "figures"            # Hebrew figures (the default)
+FIGURES_EN = FIGURES / "en"              # English copies, used by README.en.md
 EXTRACT_DIR = ROOT / "data" / "extract"
 RESTRICTED_DIR = ROOT / "data" / "restricted"
 DEFAULT_PROTOCOL = ROOT / "protocol" / "lactate_mortality.yaml"
@@ -45,6 +72,11 @@ DEFAULT_PROTOCOL = ROOT / "protocol" / "lactate_mortality.yaml"
 def load_protocol(path: Path = DEFAULT_PROTOCOL) -> dict:
     with open(path, encoding="utf-8") as fh:
         return yaml.safe_load(fh)
+
+
+def protocol_text(protocol: dict, field: str) -> str:
+    """Hebrew version of a protocol text field (e.g. title_he), else the English one."""
+    return str(protocol.get(f"{field}_he") or protocol[field]).strip()
 
 
 def connect(db_path: Path = DB_PATH) -> sqlite3.Connection:
@@ -77,12 +109,14 @@ def candidate_stays(con: sqlite3.Connection, protocol: dict) -> pd.DataFrame:
     return df
 
 
-# Sequential inclusion steps, in the order a flow diagram shows them
+# Sequential inclusion steps, in the order a flow diagram shows them: (flag, Hebrew label, English label)
+ALL_STAYS = ("כל האשפוזים בטיפול נמרץ במאגר", "All ICU stays in the database")
 CRITERIA = [
-    ("c_adult", "גיל {min_age} ומעלה"),
-    ("c_first_stay", "אשפוז ראשון של המטופל בטיפול נמרץ"),
-    ("c_los", "שהייה בטיפול נמרץ של {min_icu_los_hours} שעות לפחות"),
-    ("c_lactate_measured", "נמדד לקטט ({lab_window_hours_before_icu} שעות לפני עד {lab_window_hours_after_icu} שעות אחרי הקבלה)"),
+    ("c_adult", "גיל {min_age} ומעלה", "Age >= {min_age}"),
+    ("c_first_stay", "אשפוז ראשון של המטופל בטיפול נמרץ", "First ICU stay of the patient"),
+    ("c_los", "שהייה בטיפול נמרץ של {min_icu_los_hours} שעות לפחות", "ICU length of stay >= {min_icu_los_hours} h"),
+    ("c_lactate_measured", "נמדד לקטט ({lab_window_hours_before_icu} שעות לפני עד {lab_window_hours_after_icu} שעות אחרי הקבלה)",
+     "Lactate measured (-{lab_window_hours_before_icu} h to +{lab_window_hours_after_icu} h)"),
 ]
 
 
@@ -92,12 +126,12 @@ def apply_criteria(df: pd.DataFrame, protocol: dict) -> tuple[pd.DataFrame, list
     labels = {"min_age": pop["min_age"], "min_icu_los_hours": pop["min_icu_los_hours"],
               "lab_window_hours_before_icu": pop["lab_window_hours_before_icu"],
               "lab_window_hours_after_icu": pop["lab_window_hours_after_icu"]}
-    flow = [{"step": "כל האשפוזים בטיפול נמרץ במאגר", "stays": len(df),
+    flow = [{"step": ALL_STAYS[0], "step_en": ALL_STAYS[1], "stays": len(df),
              "patients": df.subject_id.nunique(), "excluded": 0}]
     current = df
-    for col, label in CRITERIA:
+    for col, label, label_en in CRITERIA:
         kept = current[current[col] == 1]
-        flow.append({"step": label.format(**labels), "stays": len(kept),
+        flow.append({"step": label.format(**labels), "step_en": label_en.format(**labels), "stays": len(kept),
                      "patients": kept.subject_id.nunique(), "excluded": len(current) - len(kept)})
         current = kept
     return current.copy(), flow

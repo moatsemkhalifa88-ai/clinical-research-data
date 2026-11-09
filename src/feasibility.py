@@ -14,26 +14,35 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from common import FIGURES, REPORTS, apply_criteria, candidate_stays, connect, he, load_protocol, md_table, rtl
+from common import (FIGURES, FIGURES_EN, REPORTS, apply_criteria, candidate_stays, connect, he, load_protocol,
+                    md_table, protocol_text, rtl)
 
 MIN_EVENTS_PER_VARIABLE = 10   # common rule of thumb for logistic regression
 
 
-def flow_figure(flow: list[dict], path) -> None:
+# Figure text per language: (step label key, counts line, excluded note)
+FLOW_TEXT = {
+    "he": ("step", "{stays} אשפוזים · {patients} מטופלים", "הוצאו: {excluded}"),
+    "en": ("step_en", "{stays} stays · {patients} patients", "excluded: {excluded}"),
+}
+
+
+def flow_figure(flow: list[dict], path, lang: str = "he") -> None:
+    step_key, counts, excluded = FLOW_TEXT[lang]
+    show = he if lang == "he" else str
     fig, ax = plt.subplots(figsize=(7, 1.25 * len(flow)))
     ax.axis("off")
     n = len(flow)
     for i, step in enumerate(flow):
         y = n - 1 - i
         ax.add_patch(plt.Rectangle((0.05, y + 0.15), 0.6, 0.7, fc="#e8eef7", ec="#1f3864", lw=1.2))
-        ax.text(0.35, y + 0.6, he(step["step"]), ha="center", va="center", fontsize=9.5, weight="bold")
-        ax.text(0.35, y + 0.35, he(f"{step['stays']} אשפוזים · {step['patients']} מטופלים"),
-                ha="center", va="center", fontsize=9)
+        ax.text(0.35, y + 0.6, show(step[step_key]), ha="center", va="center", fontsize=9.5, weight="bold")
+        ax.text(0.35, y + 0.35, show(counts.format(**step)), ha="center", va="center", fontsize=9)
         if i > 0:
             ax.annotate("", xy=(0.35, y + 0.85), xytext=(0.35, y + 1.15),
                         arrowprops=dict(arrowstyle="->", color="#1f3864"))
             if step["excluded"]:
-                ax.text(0.7, y + 1.0, he(f"הוצאו: {step['excluded']}"), va="center",
+                ax.text(0.7, y + 1.0, show(excluded.format(**step)), va="center",
                         fontsize=8.5, color="#a33")
     ax.set_xlim(0, 1)
     ax.set_ylim(0, n)
@@ -73,14 +82,15 @@ def run() -> dict:
         verdict = (f"ישים: {events} אירועים מספיקים למודל עם {n_params} משתנים "
                    f"({epv:.1f} אירועים למשתנה, EPV).")
 
-    FIGURES.mkdir(parents=True, exist_ok=True)
-    flow_figure(flow, FIGURES / "cohort_flow.png")
+    FIGURES_EN.mkdir(parents=True, exist_ok=True)
+    flow_figure(flow, FIGURES / "cohort_flow.png", "he")
+    flow_figure(flow, FIGURES_EN / "cohort_flow.png", "en")
 
-    flow_df = pd.DataFrame(flow).rename(columns={"step": "שלב", "stays": "אשפוזים בטיפול נמרץ (ICU)",
+    flow_df = pd.DataFrame(flow).drop(columns="step_en").rename(columns={"step": "שלב", "stays": "אשפוזים בטיפול נמרץ (ICU)",
                                                  "patients": "מטופלים", "excluded": "הוצאו בשלב זה"})
     report = f"""# בדיקת היתכנות (Feasibility) - {protocol['study_id']}
 
-**המחקר:** {protocol['title']}
+**המחקר:** {protocol_text(protocol, 'title')}
 **מבקש הבדיקה:** {protocol['principal_investigator']}
 **תאריך הבדיקה:** {date.today().isoformat()} · **מקור הנתונים:** MIMIC-IV Clinical Database Demo v2.2
 

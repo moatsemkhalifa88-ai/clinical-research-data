@@ -2,7 +2,7 @@
 
 # בדיקת היתכנות (Feasibility) - EMK-2026-014
 
-**המחקר:** Early hyperlactatemia and in-hospital mortality in adult ICU patients
+**המחקר:** היפרלקטטמיה מוקדמת ותמותה באשפוז במטופלים מבוגרים בטיפול נמרץ
 **מבקש הבדיקה:** Dr. A. Researcher (fictional)
 **תאריך הבדיקה:** 2026-11-09 · **מקור הנתונים:** MIMIC-IV Clinical Database Demo v2.2
 

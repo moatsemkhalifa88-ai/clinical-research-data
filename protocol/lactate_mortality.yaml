@@ -12,6 +12,13 @@ question: >
   Is a high blood lactate in the first 24 hours of an ICU stay associated
   with in-hospital mortality, after adjusting for age and sex?
 
+# Hebrew versions for the Hebrew reports (optional: reports fall back to the
+# English fields above when these are missing)
+title_he: היפרלקטטמיה מוקדמת ותמותה באשפוז במטופלים מבוגרים בטיפול נמרץ
+question_he: >
+  האם רמת לקטט גבוהה בדם ב-24 השעות הראשונות של שהייה בטיפול נמרץ קשורה
+  לתמותה במהלך האשפוז, לאחר תקנון לגיל ולמין?
+
 population:
   min_age: 18
   first_icu_stay_only: true          # one stay per patient, avoids repeated measures
