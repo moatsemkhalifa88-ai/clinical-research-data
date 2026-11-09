@@ -28,7 +28,7 @@
               },
               "queryRef": "fact_patient.admission_group",
               "nativeQueryRef": "admission_group",
-              "active": true
+              "displayName": "סוג קבלה"
             }
           ]
         }
@@ -61,7 +61,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Admission'"
+                  "Value": "'סוג קבלה'"
                 }
               }
             },

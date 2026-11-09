@@ -28,7 +28,7 @@
               },
               "queryRef": "validation_checks.layer",
               "nativeQueryRef": "layer",
-              "displayName": "Layer"
+              "displayName": "שכבה"
             },
             {
               "field": {
@@ -43,7 +43,7 @@
               },
               "queryRef": "validation_checks.area",
               "nativeQueryRef": "area",
-              "displayName": "Area"
+              "displayName": "תחום"
             },
             {
               "field": {
@@ -58,7 +58,7 @@
               },
               "queryRef": "validation_checks.check_name",
               "nativeQueryRef": "check_name",
-              "displayName": "Check"
+              "displayName": "בדיקה"
             },
             {
               "field": {
@@ -73,7 +73,7 @@
               },
               "queryRef": "validation_checks.problems",
               "nativeQueryRef": "problems",
-              "displayName": "Rows with problems"
+              "displayName": "שורות עם בעיה"
             },
             {
               "field": {
@@ -88,7 +88,7 @@
               },
               "queryRef": "validation_checks.status",
               "nativeQueryRef": "status",
-              "displayName": "Result"
+              "displayName": "תוצאה"
             }
           ]
         }
@@ -207,7 +207,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Validation log (warnings first)'"
+                  "Value": "'יומן בדיקות התקינות (אזהרות קודם)'"
                 }
               }
             },
@@ -233,6 +233,13 @@
                       "Value": "'#1F3864'"
                     }
                   }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'right'"
                 }
               }
             }

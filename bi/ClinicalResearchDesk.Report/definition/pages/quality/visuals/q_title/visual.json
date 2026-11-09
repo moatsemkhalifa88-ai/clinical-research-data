@@ -19,26 +19,28 @@
               {
                 "textRuns": [
                   {
-                    "value": "Data quality & cohort selection",
+                    "value": "איכות הנתונים ובחירת הקוהורט",
                     "textStyle": {
                       "fontSize": "22pt",
                       "fontWeight": "bold",
                       "color": "#1F3864"
                     }
                   }
-                ]
+                ],
+                "horizontalTextAlignment": "right"
               },
               {
                 "textRuns": [
                   {
-                    "value": "26 automated checks run on the source database and the delivered extract before release · any FAIL blocks the extract",
+                    "value": "26 בדיקות אוטומטיות על מאגר המקור ועל קובץ החילוץ, לפני המסירה לחוקר · כל FAIL חוסם את המסירה",
                     "textStyle": {
                       "fontSize": "11pt",
                       "fontWeight": "normal",
                       "color": "#5F6B7A"
                     }
                   }
-                ]
+                ],
+                "horizontalTextAlignment": "right"
               }
             ]
           }

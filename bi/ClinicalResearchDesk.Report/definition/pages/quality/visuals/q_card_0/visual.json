@@ -2,7 +2,7 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "q_card_0",
   "position": {
-    "x": 24,
+    "x": 24.0,
     "y": 124,
     "z": 0,
     "height": 130,
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "validation_checks.Checks",
-              "nativeQueryRef": "Checks"
+              "nativeQueryRef": "Checks",
+              "displayName": "בדיקות שהורצו"
             }
           ]
         }
@@ -167,7 +168,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Checks run'"
+                  "Value": "'בדיקות שהורצו'"
                 }
               }
             },
@@ -193,6 +194,13 @@
                       "Value": "'#1F3864'"
                     }
                   }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'right'"
                 }
               }
             }

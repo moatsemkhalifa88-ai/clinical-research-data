@@ -28,7 +28,7 @@
               },
               "queryRef": "dim_care_unit.care_unit",
               "nativeQueryRef": "care_unit",
-              "active": true
+              "displayName": "יחידה"
             }
           ]
         },
@@ -46,7 +46,8 @@
                 }
               },
               "queryRef": "fact_patient.Patients",
-              "nativeQueryRef": "Patients"
+              "nativeQueryRef": "Patients",
+              "displayName": "מטופלים"
             }
           ]
         }
@@ -215,7 +216,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Patients by first ICU unit'"
+                  "Value": "'מטופלים לפי יחידת הטיפול הנמרץ הראשונה'"
                 }
               }
             },
@@ -241,6 +242,13 @@
                       "Value": "'#1F3864'"
                     }
                   }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'right'"
                 }
               }
             }

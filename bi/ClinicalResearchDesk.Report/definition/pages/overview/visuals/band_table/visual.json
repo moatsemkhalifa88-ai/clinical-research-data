@@ -28,7 +28,7 @@
               },
               "queryRef": "dim_lactate_band.lactate_band",
               "nativeQueryRef": "lactate_band",
-              "displayName": "Lactate (mmol/L)"
+              "displayName": "לקטט (mmol/L)"
             },
             {
               "field": {
@@ -43,7 +43,7 @@
               },
               "queryRef": "dim_lactate_band.meaning",
               "nativeQueryRef": "meaning",
-              "displayName": "Level"
+              "displayName": "רמה"
             },
             {
               "field": {
@@ -57,7 +57,8 @@
                 }
               },
               "queryRef": "fact_patient.Patients",
-              "nativeQueryRef": "Patients"
+              "nativeQueryRef": "Patients",
+              "displayName": "מטופלים"
             },
             {
               "field": {
@@ -71,7 +72,8 @@
                 }
               },
               "queryRef": "fact_patient.Deaths",
-              "nativeQueryRef": "Deaths"
+              "nativeQueryRef": "Deaths",
+              "displayName": "פטירות"
             },
             {
               "field": {
@@ -86,7 +88,7 @@
               },
               "queryRef": "fact_patient.Mortality %",
               "nativeQueryRef": "Mortality %",
-              "displayName": "In-hospital mortality"
+              "displayName": "תמותה באשפוז"
             },
             {
               "field": {
@@ -101,7 +103,7 @@
               },
               "queryRef": "fact_patient.30-day Mortality %",
               "nativeQueryRef": "30-day Mortality %",
-              "displayName": "30-day mortality"
+              "displayName": "תמותה תוך 30 יום"
             }
           ]
         }
@@ -202,7 +204,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Outcomes by lactate band'"
+                  "Value": "'תוצאות לפי טווח לקטט'"
                 }
               }
             },
@@ -228,6 +230,13 @@
                       "Value": "'#1F3864'"
                     }
                   }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'right'"
                 }
               }
             }

@@ -28,7 +28,7 @@
               },
               "queryRef": "fact_patient.sex",
               "nativeQueryRef": "sex",
-              "active": true
+              "displayName": "מין"
             }
           ]
         }
@@ -61,7 +61,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Sex'"
+                  "Value": "'מין'"
                 }
               }
             },

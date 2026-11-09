@@ -49,7 +49,7 @@ table fact_patient
 		formatString: 0.00
 		lineageTag: d3510312-7ce7-46fa-9102-19f53afd7981
 
-	measure 'Sample Size Note' = VAR d = [Deaths] RETURN IF ( d < 5, "Caution: only " & d & " deaths in this selection - too few for firm conclusions", d & " deaths in this selection" )
+	measure 'Sample Size Note' = VAR d = [Deaths] RETURN IF ( d < 5, "זהירות: רק " & d & " פטירות בבחירה הנוכחית, מעט מדי למסקנות מבוססות", d & " פטירות בבחירה הנוכחית" )
 		lineageTag: d8228163-4adb-4306-804c-9e98e5cb8c97
 
 	column study_id

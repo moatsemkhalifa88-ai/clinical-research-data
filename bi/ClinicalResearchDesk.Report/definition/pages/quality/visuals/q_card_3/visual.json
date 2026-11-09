@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "validation_checks.Checks Failed",
-              "nativeQueryRef": "Checks Failed"
+              "nativeQueryRef": "Checks Failed",
+              "displayName": "נכשלו"
             }
           ]
         }
@@ -167,7 +168,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Failed'"
+                  "Value": "'נכשלו'"
                 }
               }
             },
@@ -193,6 +194,13 @@
                       "Value": "'#1F3864'"
                     }
                   }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'right'"
                 }
               }
             }

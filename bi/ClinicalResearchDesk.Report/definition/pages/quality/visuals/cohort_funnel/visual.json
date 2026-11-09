@@ -28,7 +28,7 @@
               },
               "queryRef": "cohort_flow.step",
               "nativeQueryRef": "step",
-              "active": true
+              "displayName": "שלב"
             }
           ]
         },
@@ -46,7 +46,8 @@
                 }
               },
               "queryRef": "cohort_flow.Patients at Step",
-              "nativeQueryRef": "Patients at Step"
+              "nativeQueryRef": "Patients at Step",
+              "displayName": "מטופלים בשלב"
             }
           ]
         }
@@ -197,7 +198,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Cohort flow: 100 patients → 67 eligible'"
+                  "Value": "'זרימת הקוהורט: 100 מטופלים ← 67 שנכללו'"
                 }
               }
             },
@@ -223,6 +224,13 @@
                       "Value": "'#1F3864'"
                     }
                   }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'right'"
                 }
               }
             }

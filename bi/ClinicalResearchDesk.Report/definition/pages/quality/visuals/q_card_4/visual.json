@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "validation_checks.Release Decision",
-              "nativeQueryRef": "Release Decision"
+              "nativeQueryRef": "Release Decision",
+              "displayName": "החלטת מסירה"
             }
           ]
         }
@@ -167,7 +168,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Release decision'"
+                  "Value": "'החלטת מסירה'"
                 }
               }
             },
@@ -193,6 +194,13 @@
                       "Value": "'#1F3864'"
                     }
                   }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'right'"
                 }
               }
             }

@@ -3,6 +3,11 @@
 Writes ClinicalResearchDesk.Report/definition/pages/** from a compact layout
 spec, so the dashboard is reproducible and reviewable in git.
 Usage: python bi/make_report.py
+
+All on-screen text is Hebrew. Model names (tables, columns, measures) stay in
+English; each field gets a Hebrew displayName inside the visual instead, so the
+semantic model is untouched. Power BI lays out right-to-left text itself, so the
+strings here are plain Hebrew (no bidi reordering).
 """
 import json
 import shutil
@@ -61,7 +66,7 @@ def color(hexcode):
 
 def title_obj(text, size=12):
     return {"title": [{"properties": {"show": lit(True), "text": lit(text), "fontSize": lit(size),
-                                      "bold": lit(True), "fontColor": color(NAVY)}}]}
+                                      "bold": lit(True), "fontColor": color(NAVY), "alignment": lit("right")}}]}
 
 
 def container_style(text=None):
@@ -93,7 +98,8 @@ def visual(name, vtype, x, y, w, h, roles=None, objects=None, vco=None, sort=Non
 
 def textbox(name, x, y, w, h, runs):
     paragraphs = [{"textRuns": [{"value": t, "textStyle": {"fontSize": f"{s}pt", "fontWeight": "bold" if b else "normal",
-                                                            "color": c}}]} for t, s, b, c in runs]
+                                                            "color": c}}],
+                   "horizontalTextAlignment": "right"} for t, s, b, c in runs]
     return {"$schema": f"{SCHEMA}/visualContainer/2.14.0/schema.json", "name": name,
             "position": {"x": x, "y": y, "z": 1, "height": h, "width": w, "tabOrder": 0},
             "visual": {"visualType": "textbox", "objects": {"general": [{"properties": {"paragraphs": paragraphs}}]},
@@ -131,77 +137,79 @@ def overview():
     F, L, A, C = "fact_patient", "dim_lactate_band", "dim_age_band", "dim_care_unit"
     v = [
         textbox("title", 24, 12, 1300, 96, [
-            ("Clinical Research Data Desk · Study EMK-2026-014", 22, True, NAVY),
-            ("Early lactate and in-hospital mortality in adult ICU patients · MIMIC-IV Demo v2.2, de-identified extract · mock study for portfolio use", 11, False, GREY),
+            ("Clinical Research Data Desk · מחקר EMK-2026-014", 22, True, NAVY),
+            ("לקטט מוקדם ותמותה באשפוז במטופלים מבוגרים בטיפול נמרץ · MIMIC-IV Demo v2.2, קובץ חילוץ ללא מזהים · מחקר פיקטיבי לתיק עבודות", 11, False, GREY),
         ]),
-        slicer("sl_sex", 1340, 20, 180, 80, col(F, "sex"), "Sex"),
-        slicer("sl_adm", 1530, 20, 180, 80, col(F, "admission_group"), "Admission"),
-        slicer("sl_unit", 1720, 20, 176, 80, col(C, "care_unit"), "ICU unit"),
+        slicer("sl_sex", 1340, 20, 180, 80, (col(F, "sex"), "מין"), "מין"),
+        slicer("sl_adm", 1530, 20, 180, 80, (col(F, "admission_group"), "סוג קבלה"), "סוג קבלה"),
+        slicer("sl_unit", 1720, 20, 176, 80, (col(C, "care_unit"), "יחידת טיפול נמרץ"), "יחידת טיפול נמרץ"),
     ]
-    cards = [("Patients", "Eligible patients", NAVY), ("Deaths", "In-hospital deaths", RED),
-             ("Mortality %", "In-hospital mortality", RED), ("High Lactate Share", "Lactate > 2 mmol/L", AMBER),
-             ("Median Max Lactate", "Median max lactate (mmol/L)", NAVY), ("Median ICU LOS (days)", "Median ICU stay (days)", NAVY)]
+    cards = [("Patients", "מטופלים שנכללו", NAVY), ("Deaths", "פטירות באשפוז", RED),
+             ("Mortality %", "תמותה באשפוז", RED), ("High Lactate Share", "לקטט > 2 mmol/L", AMBER),
+             ("Median Max Lactate", "חציון הלקטט המרבי (mmol/L)", NAVY), ("Median ICU LOS (days)", "חציון השהייה בטיפול נמרץ (ימים)", NAVY)]
     w = (1872 - 5 * 16) / 6
     for i, (m, label, c) in enumerate(cards):
-        v.append(card(f"card_{i}", 24 + i * (w + 16), 124, w, 130, meas(F, m), label, c))
+        v.append(card(f"card_{i}", 24 + i * (w + 16), 124, w, 130, (meas(F, m), label), label, c))
 
     v.append(visual("mort_by_lactate", "clusteredColumnChart", 24, 270, 620, 400,
-                    {"Category": [col(L, "lactate_band")], "Y": [meas(F, "Mortality %")]},
+                    {"Category": [(col(L, "lactate_band"), "טווח לקטט (mmol/L)")], "Y": [(meas(F, "Mortality %"), "תמותה באשפוז")]},
                     {**data_labels(), **bar_color(RED)},
-                    container_style("In-hospital mortality by early lactate band (mmol/L)")))
+                    container_style("תמותה באשפוז לפי טווח הלקטט המוקדם (mmol/L)")))
     v.append(visual("lactate_vs_los", "scatterChart", 660, 270, 620, 400,
-                    {"Category": [(col(F, "study_id"), "Patient")], "X": [(agg(F, "max_lactate_24h"), "Max lactate, first 24 h (mmol/L)")],
-                     "Y": [(agg(F, "icu_los_days"), "ICU length of stay (days)")],
-                     "Series": [(col(F, "in_hospital_death"), "Died in hospital")]},
-                    None, container_style("Max lactate vs ICU length of stay (1 = died in hospital)")))
+                    {"Category": [(col(F, "study_id"), "מטופל")], "X": [(agg(F, "max_lactate_24h"), "לקטט מרבי ב-24 השעות הראשונות (mmol/L)")],
+                     "Y": [(agg(F, "icu_los_days"), "משך השהייה בטיפול נמרץ (ימים)")],
+                     "Series": [(col(F, "in_hospital_death"), "נפטר באשפוז")]},
+                    None, container_style("לקטט מרבי מול משך השהייה בטיפול נמרץ (1 = נפטר באשפוז)")))
     v.append(visual("pts_by_unit", "clusteredBarChart", 1296, 270, 600, 400,
-                    {"Category": [col(C, "care_unit")], "Y": [meas(F, "Patients")]},
+                    {"Category": [(col(C, "care_unit"), "יחידה")], "Y": [(meas(F, "Patients"), "מטופלים")]},
                     {**data_labels(), **bar_color(TEAL)},
-                    container_style("Patients by first ICU unit"), sort=(meas(F, "Patients"), "Descending")))
+                    container_style("מטופלים לפי יחידת הטיפול הנמרץ הראשונה"), sort=(meas(F, "Patients"), "Descending")))
     v.append(visual("mort_by_age", "clusteredColumnChart", 24, 686, 620, 370,
-                    {"Category": [col(A, "age_band")], "Y": [meas(F, "Mortality %")]},
-                    {**data_labels(), **bar_color(NAVY)}, container_style("In-hospital mortality by age band")))
+                    {"Category": [(col(A, "age_band"), "קבוצת גיל")], "Y": [(meas(F, "Mortality %"), "תמותה באשפוז")]},
+                    {**data_labels(), **bar_color(NAVY)}, container_style("תמותה באשפוז לפי קבוצת גיל")))
     v.append(visual("band_table", "tableEx", 660, 686, 620, 370,
-                    {"Values": [(col(L, "lactate_band"), "Lactate (mmol/L)"), (col(L, "meaning"), "Level"), meas(F, "Patients"),
-                                meas(F, "Deaths"), (meas(F, "Mortality %"), "In-hospital mortality"),
-                                (meas(F, "30-day Mortality %"), "30-day mortality")]},
-                    None, container_style("Outcomes by lactate band")))
-    v.append(card("risk_ratio", 1296, 686, 600, 170, meas(F, "Risk Ratio (High vs Normal)"),
-                  "Mortality risk ratio: lactate > 2 vs ≤ 2", RED))
-    note = card("sample_note", 1296, 872, 600, 184, meas(F, "Sample Size Note"), "Read with care", GREY)
+                    {"Values": [(col(L, "lactate_band"), "לקטט (mmol/L)"), (col(L, "meaning"), "רמה"),
+                                (meas(F, "Patients"), "מטופלים"), (meas(F, "Deaths"), "פטירות"),
+                                (meas(F, "Mortality %"), "תמותה באשפוז"),
+                                (meas(F, "30-day Mortality %"), "תמותה תוך 30 יום")]},
+                    None, container_style("תוצאות לפי טווח לקטט")))
+    v.append(card("risk_ratio", 1296, 686, 600, 170, (meas(F, "Risk Ratio (High vs Normal)"), "יחס סיכון לתמותה"),
+                  "יחס סיכון (Risk ratio) לתמותה: לקטט > 2 לעומת ≤ 2", RED))
+    note = card("sample_note", 1296, 872, 600, 184, (meas(F, "Sample Size Note"), "הערת גודל מדגם"), "לקרוא בזהירות", GREY)
     note["visual"]["objects"]["labels"] = [{"properties": {"color": color(GREY), "fontSize": lit(13)}}]
     note["visual"]["objects"]["wordWrap"] = [{"properties": {"show": lit(True)}}]
     v.append(note)
-    return "overview", "Study overview", v
+    return "overview", "סקירת המחקר", v
 
 
 def quality():
     V, CF = "validation_checks", "cohort_flow"
     v = [textbox("q_title", 24, 12, 1872, 96, [
-        ("Data quality & cohort selection", 22, True, NAVY),
-        ("26 automated checks run on the source database and the delivered extract before release · any FAIL blocks the extract", 11, False, GREY),
+        ("איכות הנתונים ובחירת הקוהורט", 22, True, NAVY),
+        ("26 בדיקות אוטומטיות על מאגר המקור ועל קובץ החילוץ, לפני המסירה לחוקר · כל FAIL חוסם את המסירה", 11, False, GREY),
     ])]
-    cards = [("Checks", "Checks run", NAVY), ("Checks Passed", "Passed", GREEN), ("Checks Warned", "Warnings (documented)", AMBER),
-             ("Checks Failed", "Failed", RED), ("Release Decision", "Release decision", GREEN)]
+    cards = [("Checks", "בדיקות שהורצו", NAVY), ("Checks Passed", "עברו", GREEN), ("Checks Warned", "אזהרות (מתועדות)", AMBER),
+             ("Checks Failed", "נכשלו", RED), ("Release Decision", "החלטת מסירה", GREEN)]
     w = (1872 - 4 * 16) / 5
     for i, (m, label, c) in enumerate(cards):
-        v.append(card(f"q_card_{i}", 24 + i * (w + 16), 124, w, 130, meas(V, m), label, c,
+        v.append(card(f"q_card_{i}", 24 + i * (w + 16), 124, w, 130, (meas(V, m), label), label, c,
                       size=20 if m == "Release Decision" else 30))
     v.append(visual("cohort_funnel", "funnel", 24, 270, 760, 400,
-                    {"Category": [col(CF, "step")], "Y": [meas(CF, "Patients at Step")]},
+                    {"Category": [(col(CF, "step"), "שלב")], "Y": [(meas(CF, "Patients at Step"), "מטופלים בשלב")]},
                     {**data_labels("#FFFFFF"), **bar_color(NAVY)},
-                    container_style("Cohort flow: 100 patients → 67 eligible")))
+                    container_style("זרימת הקוהורט: 100 מטופלים ← 67 שנכללו")))
     status_colors = {"dataPoint": [series_color(col(V, "status"), st, c)
                                    for st, c in [("PASS", GREEN), ("WARN", AMBER), ("FAIL", RED)]]}
     v.append(visual("checks_by_area", "barChart", 800, 270, 1096, 400,
-                    {"Category": [(col(V, "area"), "Area")], "Series": [(col(V, "status"), "Result")], "Y": [meas(V, "Checks")]},
-                    {**data_labels("#FFFFFF"), **status_colors}, container_style("Checks by area and result"),
+                    {"Category": [(col(V, "area"), "תחום")], "Series": [(col(V, "status"), "תוצאה")],
+                     "Y": [(meas(V, "Checks"), "בדיקות")]},
+                    {**data_labels("#FFFFFF"), **status_colors}, container_style("בדיקות לפי תחום ותוצאה"),
                     sort=(meas(V, "Checks"), "Descending")))
     v.append(visual("checks_table", "tableEx", 24, 686, 1872, 370,
-                    {"Values": [(col(V, "layer"), "Layer"), (col(V, "area"), "Area"), (col(V, "check_name"), "Check"),
-                                (col(V, "problems"), "Rows with problems"), (col(V, "status"), "Result")]},
-                    None, container_style("Validation log (warnings first)"), sort=(col(V, "problems"), "Descending")))
-    return "quality", "Data quality", v
+                    {"Values": [(col(V, "layer"), "שכבה"), (col(V, "area"), "תחום"), (col(V, "check_name"), "בדיקה"),
+                                (col(V, "problems"), "שורות עם בעיה"), (col(V, "status"), "תוצאה")]},
+                    None, container_style("יומן בדיקות התקינות (אזהרות קודם)"), sort=(col(V, "problems"), "Descending")))
+    return "quality", "איכות נתונים", v
 
 
 def write():

@@ -28,7 +28,7 @@
               },
               "queryRef": "dim_care_unit.care_unit",
               "nativeQueryRef": "care_unit",
-              "active": true
+              "displayName": "יחידת טיפול נמרץ"
             }
           ]
         }
@@ -61,7 +61,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'ICU unit'"
+                  "Value": "'יחידת טיפול נמרץ'"
                 }
               }
             },

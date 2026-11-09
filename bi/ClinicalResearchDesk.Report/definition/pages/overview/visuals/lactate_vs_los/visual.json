@@ -28,27 +28,7 @@
               },
               "queryRef": "fact_patient.study_id",
               "nativeQueryRef": "study_id",
-              "active": true,
-              "displayName": "Patient"
-            }
-          ]
-        },
-        "Series": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_patient"
-                    }
-                  },
-                  "Property": "in_hospital_death"
-                }
-              },
-              "queryRef": "fact_patient.in_hospital_death",
-              "nativeQueryRef": "in_hospital_death",
-              "displayName": "Died in hospital"
+              "displayName": "מטופל"
             }
           ]
         },
@@ -72,8 +52,7 @@
               },
               "queryRef": "Sum(fact_patient.max_lactate_24h)",
               "nativeQueryRef": "max_lactate_24h",
-              "active": true,
-              "displayName": "Max lactate, first 24 h (mmol/L)"
+              "displayName": "לקטט מרבי ב-24 השעות הראשונות (mmol/L)"
             }
           ]
         },
@@ -97,7 +76,26 @@
               },
               "queryRef": "Sum(fact_patient.icu_los_days)",
               "nativeQueryRef": "icu_los_days",
-              "displayName": "ICU length of stay (days)"
+              "displayName": "משך השהייה בטיפול נמרץ (ימים)"
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_patient"
+                    }
+                  },
+                  "Property": "in_hospital_death"
+                }
+              },
+              "queryRef": "fact_patient.in_hospital_death",
+              "nativeQueryRef": "in_hospital_death",
+              "displayName": "נפטר באשפוז"
             }
           ]
         }
@@ -198,7 +196,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Max lactate vs ICU length of stay (1 = died in hospital)'"
+                  "Value": "'לקטט מרבי מול משך השהייה בטיפול נמרץ (1 = נפטר באשפוז)'"
                 }
               }
             },
@@ -224,6 +222,13 @@
                       "Value": "'#1F3864'"
                     }
                   }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'right'"
                 }
               }
             }

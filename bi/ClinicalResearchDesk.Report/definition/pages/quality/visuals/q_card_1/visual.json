@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "validation_checks.Checks Passed",
-              "nativeQueryRef": "Checks Passed"
+              "nativeQueryRef": "Checks Passed",
+              "displayName": "עברו"
             }
           ]
         }
@@ -167,7 +168,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Passed'"
+                  "Value": "'עברו'"
                 }
               }
             },
@@ -193,6 +194,13 @@
                       "Value": "'#1F3864'"
                     }
                   }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'right'"
                 }
               }
             }

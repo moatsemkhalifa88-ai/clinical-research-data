@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "fact_patient.Sample Size Note",
-              "nativeQueryRef": "Sample Size Note"
+              "nativeQueryRef": "Sample Size Note",
+              "displayName": "הערת גודל מדגם"
             }
           ]
         }
@@ -180,7 +181,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Read with care'"
+                  "Value": "'לקרוא בזהירות'"
                 }
               }
             },
@@ -206,6 +207,13 @@
                       "Value": "'#1F3864'"
                     }
                   }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'right'"
                 }
               }
             }

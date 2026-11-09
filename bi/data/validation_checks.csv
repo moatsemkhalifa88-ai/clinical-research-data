@@ -1,27 +1,27 @@
 ﻿layer,area,check_name,problems,status
-Source database,Keys,patients.subject_id is unique,0,PASS
-Source database,Keys,admissions.hadm_id is unique,0,PASS
-Source database,Keys,icustays.stay_id is unique,0,PASS
-Source database,Referential,every ICU stay links to an admission,0,PASS
-Source database,Referential,every admission links to a patient,0,PASS
-Source database,Time order,admission ends after it starts,0,PASS
-Source database,Time order,ICU stay ends after it starts,0,PASS
-Source database,Time order,ICU stay falls inside its admission (1 h tolerance),14,WARN
-Source database,Consistency,death flag matches recorded death time,0,PASS
-Source database,Consistency,in-hospital deaths have a date of death,0,PASS
-Source database,Units,Lactate results all in mmol/L,0,PASS
-Source database,Ranges,"Lactate values inside [0.1, 30]",0,PASS
-Source database,Ranges,Lactate results have a numeric value,0,PASS
-Source database,Units,Creatinine results all in mg/dL,0,PASS
-Source database,Ranges,"Creatinine values inside [0.1, 25]",0,PASS
-Source database,Ranges,Creatinine results have a numeric value,0,PASS
-Delivered extract,Structure,"only approved variables, in protocol order",0,PASS
-Delivered extract,Privacy,no hospital identifiers or calendar dates,0,PASS
-Delivered extract,Privacy,ages above 89 are grouped,0,PASS
-Delivered extract,Structure,one row per patient,0,PASS
-Delivered extract,Ranges,age between 18 and 89,0,PASS
-Delivered extract,Ranges,"exposure inside [0.1, 30]",0,PASS
-Delivered extract,Ranges,follow-up days between 0 and 30,0,PASS
-Delivered extract,Consistency,30-day deaths have follow-up < 30 days or die on day 30,0,PASS
-Delivered extract,Completeness,primary outcome has no missing values,0,PASS
-Delivered extract,Completeness,creatinine available (covariate),0,PASS
+מאגר המקור,מפתחות,patients.subject_id ייחודי,0,PASS
+מאגר המקור,מפתחות,admissions.hadm_id ייחודי,0,PASS
+מאגר המקור,מפתחות,icustays.stay_id ייחודי,0,PASS
+מאגר המקור,שלמות קישורים,כל שהייה בטיפול נמרץ מקושרת לאשפוז,0,PASS
+מאגר המקור,שלמות קישורים,כל אשפוז מקושר למטופל,0,PASS
+מאגר המקור,סדר זמנים,האשפוז מסתיים אחרי שהוא מתחיל,0,PASS
+מאגר המקור,סדר זמנים,השהייה בטיפול נמרץ מסתיימת אחרי שהיא מתחילה,0,PASS
+מאגר המקור,סדר זמנים,השהייה בטיפול נמרץ בתוך תקופת האשפוז (סטייה של עד שעה),14,WARN
+מאגר המקור,עקביות,דגל הפטירה תואם לזמן הפטירה הרשום,0,PASS
+מאגר המקור,עקביות,לכל פטירה באשפוז יש תאריך פטירה,0,PASS
+מאגר המקור,יחידות,כל תוצאות הלקטט ביחידות mmol/L,0,PASS
+מאגר המקור,טווחים,"ערכי הלקטט בטווח [0.1, 30]",0,PASS
+מאגר המקור,טווחים,לכל תוצאות הלקטט יש ערך מספרי,0,PASS
+מאגר המקור,יחידות,כל תוצאות הקריאטינין ביחידות mg/dL,0,PASS
+מאגר המקור,טווחים,"ערכי הקריאטינין בטווח [0.1, 25]",0,PASS
+מאגר המקור,טווחים,לכל תוצאות הקריאטינין יש ערך מספרי,0,PASS
+קובץ החילוץ שנמסר,מבנה,"רק משתנים מאושרים, לפי סדר הפרוטוקול",0,PASS
+קובץ החילוץ שנמסר,פרטיות,אין מזהי בית חולים ואין תאריכים קלנדריים,0,PASS
+קובץ החילוץ שנמסר,פרטיות,גילאים מעל 89 מקובצים,0,PASS
+קובץ החילוץ שנמסר,מבנה,שורה אחת לכל מטופל,0,PASS
+קובץ החילוץ שנמסר,טווחים,גיל בין 18 ל-89,0,PASS
+קובץ החילוץ שנמסר,טווחים,"החשיפה בטווח [0.1, 30]",0,PASS
+קובץ החילוץ שנמסר,טווחים,ימי מעקב בין 0 ל-30,0,PASS
+קובץ החילוץ שנמסר,עקביות,לפטירות תוך 30 יום יש מעקב של 30 יום לכל היותר,0,PASS
+קובץ החילוץ שנמסר,שלמות,אין ערכים חסרים בתוצאה הראשית,0,PASS
+קובץ החילוץ שנמסר,שלמות,קריאטינין זמין (משתנה מתקנן),0,PASS

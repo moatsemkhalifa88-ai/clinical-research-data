@@ -24,16 +24,18 @@ from validate import extract_checks, source_checks
 BI_DIR = ROOT / "bi" / "data"
 ENC = "utf-8-sig"  # BOM so Power BI reads the ≤ and – signs correctly
 
+# Labels are plain Hebrew: Power BI handles right-to-left display itself (no bidi reordering here).
 LACTATE_BANDS = [  # (upper bound, label, meaning)
-    (2.0, "≤ 2", "Normal"),
-    (4.0, "2–4", "Raised"),
-    (np.inf, "> 4", "Severe"),
+    (2.0, "≤ 2", "תקין"),
+    (4.0, "2–4", "מוגבר"),
+    (np.inf, "> 4", "חמור"),
 ]
 AGE_BANDS = [(39, "18–39"), (59, "40–59"), (74, "60–74"), (200, "75+")]
 ADMISSION_GROUPS = {
-    "EW EMER.": "Emergency", "DIRECT EMER.": "Emergency", "URGENT": "Urgent",
-    "ELECTIVE": "Elective", "SURGICAL SAME DAY ADMISSION": "Elective", "OBSERVATION ADMIT": "Observation",
+    "EW EMER.": "חירום", "DIRECT EMER.": "חירום", "URGENT": "דחוף",
+    "ELECTIVE": "אלקטיבי", "SURGICAL SAME DAY ADMISSION": "אלקטיבי", "OBSERVATION ADMIT": "השגחה",
 }
+SEX = {"F": "נקבה", "M": "זכר"}
 
 
 def _band(value: float, bands: list[tuple]) -> str:
@@ -58,8 +60,8 @@ def run() -> None:
         "study_id": df.study_id,
         "age": df.age,
         "age_band": df.age.map(lambda a: _band(a, AGE_BANDS)),
-        "sex": df.sex.map({"F": "Female", "M": "Male"}),
-        "admission_group": df.admission_type.map(ADMISSION_GROUPS).fillna("Other"),
+        "sex": df.sex.map(SEX),
+        "admission_group": df.admission_type.map(ADMISSION_GROUPS).fillna("אחר"),
         "care_unit": df.first_careunit.map(_short_unit),
         "icu_los_days": df.icu_los_days,
         "max_lactate_24h": df.max_lactate_24h,
@@ -95,8 +97,8 @@ def run() -> None:
                    "patients": f["patients"], "excluded": f["excluded"]} for i, f in enumerate(flow, 1)]
                  ).to_csv(BI_DIR / "cohort_flow.csv", index=False, encoding=ENC)
 
-    checks = ([{"layer": "Source database", **c} for c in src] +
-              [{"layer": "Delivered extract", **c} for c in extract_checks(df, protocol)])
+    checks = ([{"layer": "מאגר המקור", **c} for c in src] +
+              [{"layer": "קובץ החילוץ שנמסר", **c} for c in extract_checks(df, protocol)])
     pd.DataFrame(checks).rename(columns={"check": "check_name"}).assign(check_name=lambda d: d.check_name.str.replace("`", "")).to_csv(BI_DIR / "validation_checks.csv", index=False, encoding=ENC)
 
     print(f"  bi export: {len(fact)} patients, {len(flow)} flow steps, {len(checks)} checks -> bi/data/")

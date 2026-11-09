@@ -17,7 +17,7 @@ table validation_checks
 		formatString: 0
 		lineageTag: 642c7c70-08a3-4986-8acb-957708f19d08
 
-	measure 'Release Decision' = IF ( [Checks Failed] = 0, "READY TO RELEASE", "BLOCKED" )
+	measure 'Release Decision' = IF ( [Checks Failed] = 0, "מוכן למסירה", "חסום למסירה" )
 		lineageTag: e3a64338-067a-479c-9dc3-2dcfad9de1ff
 
 	column layer

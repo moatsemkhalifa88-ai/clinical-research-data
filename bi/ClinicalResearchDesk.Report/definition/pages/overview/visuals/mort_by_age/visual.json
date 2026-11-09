@@ -28,7 +28,7 @@
               },
               "queryRef": "dim_age_band.age_band",
               "nativeQueryRef": "age_band",
-              "active": true
+              "displayName": "קבוצת גיל"
             }
           ]
         },
@@ -46,7 +46,8 @@
                 }
               },
               "queryRef": "fact_patient.Mortality %",
-              "nativeQueryRef": "Mortality %"
+              "nativeQueryRef": "Mortality %",
+              "displayName": "תמותה באשפוז"
             }
           ]
         }
@@ -197,7 +198,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'In-hospital mortality by age band'"
+                  "Value": "'תמותה באשפוז לפי קבוצת גיל'"
                 }
               }
             },
@@ -223,6 +224,13 @@
                       "Value": "'#1F3864'"
                     }
                   }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'right'"
                 }
               }
             }

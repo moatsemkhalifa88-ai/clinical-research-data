@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "fact_patient.Risk Ratio (High vs Normal)",
-              "nativeQueryRef": "Risk Ratio (High vs Normal)"
+              "nativeQueryRef": "Risk Ratio (High vs Normal)",
+              "displayName": "יחס סיכון לתמותה"
             }
           ]
         }
@@ -167,7 +168,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Mortality risk ratio: lactate > 2 vs ≤ 2'"
+                  "Value": "'יחס סיכון (Risk ratio) לתמותה: לקטט > 2 לעומת ≤ 2'"
                 }
               }
             },
@@ -193,6 +194,13 @@
                       "Value": "'#1F3864'"
                     }
                   }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'right'"
                 }
               }
             }

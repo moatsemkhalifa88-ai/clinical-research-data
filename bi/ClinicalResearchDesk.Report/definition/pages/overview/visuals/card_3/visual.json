@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "card_3",
   "position": {
-    "x": 968,
+    "x": 968.0,
     "y": 124,
     "z": 0,
     "height": 130,
-    "width": 298.66666666666669,
+    "width": 298.6666666666667,
     "tabOrder": 7
   },
   "visual": {
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "fact_patient.High Lactate Share",
-              "nativeQueryRef": "High Lactate Share"
+              "nativeQueryRef": "High Lactate Share",
+              "displayName": "לקטט > 2 mmol/L"
             }
           ]
         }
@@ -167,7 +168,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Lactate > 2 mmol/L'"
+                  "Value": "'לקטט > 2 mmol/L'"
                 }
               }
             },
@@ -193,6 +194,13 @@
                       "Value": "'#1F3864'"
                     }
                   }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'right'"
                 }
               }
             }

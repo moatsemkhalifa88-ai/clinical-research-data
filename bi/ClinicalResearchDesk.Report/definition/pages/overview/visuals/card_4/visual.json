@@ -6,7 +6,7 @@
     "y": 124,
     "z": 0,
     "height": 130,
-    "width": 298.66666666666669,
+    "width": 298.6666666666667,
     "tabOrder": 8
   },
   "visual": {
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "fact_patient.Median Max Lactate",
-              "nativeQueryRef": "Median Max Lactate"
+              "nativeQueryRef": "Median Max Lactate",
+              "displayName": "חציון הלקטט המרבי (mmol/L)"
             }
           ]
         }
@@ -167,7 +168,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Median max lactate (mmol/L)'"
+                  "Value": "'חציון הלקטט המרבי (mmol/L)'"
                 }
               }
             },
@@ -193,6 +194,13 @@
                       "Value": "'#1F3864'"
                     }
                   }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'right'"
                 }
               }
             }

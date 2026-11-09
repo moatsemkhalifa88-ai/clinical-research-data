@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "card_1",
   "position": {
-    "x": 338.66666666666669,
+    "x": 338.6666666666667,
     "y": 124,
     "z": 0,
     "height": 130,
-    "width": 298.66666666666669,
+    "width": 298.6666666666667,
     "tabOrder": 5
   },
   "visual": {
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "fact_patient.Deaths",
-              "nativeQueryRef": "Deaths"
+              "nativeQueryRef": "Deaths",
+              "displayName": "פטירות באשפוז"
             }
           ]
         }
@@ -167,7 +168,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'In-hospital deaths'"
+                  "Value": "'פטירות באשפוז'"
                 }
               }
             },
@@ -193,6 +194,13 @@
                       "Value": "'#1F3864'"
                     }
                   }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'right'"
                 }
               }
             }

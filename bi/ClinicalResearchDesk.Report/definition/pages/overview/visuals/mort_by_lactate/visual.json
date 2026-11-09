@@ -28,7 +28,7 @@
               },
               "queryRef": "dim_lactate_band.lactate_band",
               "nativeQueryRef": "lactate_band",
-              "active": true
+              "displayName": "טווח לקטט (mmol/L)"
             }
           ]
         },
@@ -46,7 +46,8 @@
                 }
               },
               "queryRef": "fact_patient.Mortality %",
-              "nativeQueryRef": "Mortality %"
+              "nativeQueryRef": "Mortality %",
+              "displayName": "תמותה באשפוז"
             }
           ]
         }
@@ -197,7 +198,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'In-hospital mortality by early lactate band (mmol/L)'"
+                  "Value": "'תמותה באשפוז לפי טווח הלקטט המוקדם (mmol/L)'"
                 }
               }
             },
@@ -223,6 +224,13 @@
                       "Value": "'#1F3864'"
                     }
                   }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'right'"
                 }
               }
             }

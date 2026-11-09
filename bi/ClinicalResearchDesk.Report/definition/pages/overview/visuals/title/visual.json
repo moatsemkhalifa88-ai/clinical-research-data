@@ -19,26 +19,28 @@
               {
                 "textRuns": [
                   {
-                    "value": "Clinical Research Data Desk · Study EMK-2026-014",
+                    "value": "Clinical Research Data Desk · מחקר EMK-2026-014",
                     "textStyle": {
                       "fontSize": "22pt",
                       "fontWeight": "bold",
                       "color": "#1F3864"
                     }
                   }
-                ]
+                ],
+                "horizontalTextAlignment": "right"
               },
               {
                 "textRuns": [
                   {
-                    "value": "Early lactate and in-hospital mortality in adult ICU patients · MIMIC-IV Demo v2.2, de-identified extract · mock study for portfolio use",
+                    "value": "לקטט מוקדם ותמותה באשפוז במטופלים מבוגרים בטיפול נמרץ · MIMIC-IV Demo v2.2, קובץ חילוץ ללא מזהים · מחקר פיקטיבי לתיק עבודות",
                     "textStyle": {
                       "fontSize": "11pt",
                       "fontWeight": "normal",
                       "color": "#5F6B7A"
                     }
                   }
-                ]
+                ],
+                "horizontalTextAlignment": "right"
               }
             ]
           }

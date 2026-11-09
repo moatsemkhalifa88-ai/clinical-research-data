@@ -28,8 +28,7 @@
               },
               "queryRef": "validation_checks.area",
               "nativeQueryRef": "area",
-              "active": true,
-              "displayName": "Area"
+              "displayName": "תחום"
             }
           ]
         },
@@ -48,7 +47,7 @@
               },
               "queryRef": "validation_checks.status",
               "nativeQueryRef": "status",
-              "displayName": "Result"
+              "displayName": "תוצאה"
             }
           ]
         },
@@ -66,7 +65,8 @@
                 }
               },
               "queryRef": "validation_checks.Checks",
-              "nativeQueryRef": "Checks"
+              "nativeQueryRef": "Checks",
+              "displayName": "בדיקות"
             }
           ]
         }
@@ -343,7 +343,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Checks by area and result'"
+                  "Value": "'בדיקות לפי תחום ותוצאה'"
                 }
               }
             },
@@ -369,6 +369,13 @@
                       "Value": "'#1F3864'"
                     }
                   }
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'right'"
                 }
               }
             }
