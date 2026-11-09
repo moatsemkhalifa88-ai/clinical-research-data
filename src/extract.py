@@ -9,24 +9,24 @@ from __future__ import annotations
 
 import pandas as pd
 
-from common import EXTRACT_DIR, RESTRICTED_DIR, apply_criteria, candidate_stays, connect, load_protocol
+from common import EXTRACT_DIR, RESTRICTED_DIR, apply_criteria, candidate_stays, connect, load_protocol, rtl
 
 FOLLOW_UP_DAYS = 30
 AGE_CAP = 89          # ages above 89 are grouped (HIPAA Safe Harbor)
 
-DICTIONARY = {
-    "study_id": ("text", "Study-specific patient ID (no link to hospital IDs in this file)"),
-    "age": ("years", f"Age at ICU admission; values above {AGE_CAP} are set to {AGE_CAP}"),
-    "sex": ("F/M", "Sex as recorded"),
-    "admission_type": ("text", "Hospital admission type (e.g. EW EMER., URGENT, ELECTIVE)"),
-    "first_careunit": ("text", "First ICU care unit"),
-    "icu_los_days": ("days", "ICU length of stay"),
-    "max_lactate_24h": ("mmol/L", "Highest plausible blood lactate from -6 h to +24 h of ICU admission"),
-    "n_lactate_24h": ("count", "Number of lactate results in the window"),
-    "max_creatinine_24h": ("mg/dL", "Highest plausible serum creatinine in the same window (blank if none)"),
-    "in_hospital_death": ("0/1", "Died during the hospital admission (primary outcome)"),
-    "days_to_death_or_censor": ("days", f"Days from ICU admission to death, censored at {FOLLOW_UP_DAYS}"),
-    "death_within_30d": ("0/1", f"Died within {FOLLOW_UP_DAYS} days of ICU admission (secondary outcome)"),
+DICTIONARY = {  # variable: (unit / values, definition) - Hebrew text for the data dictionary
+    "study_id": ("טקסט", "מזהה מטופל ייעודי למחקר (בקובץ זה אין קישור למזהי בית החולים)"),
+    "age": ("שנים", f"גיל בקבלה לטיפול נמרץ (ICU); גילאים מעל {AGE_CAP} מוצגים כ-{AGE_CAP}"),
+    "sex": ("F/M", "מין, כפי שתועד"),
+    "admission_type": ("טקסט", "סוג הקבלה לאשפוז (למשל EW EMER., URGENT, ELECTIVE)"),
+    "first_careunit": ("טקסט", "יחידת הטיפול הנמרץ הראשונה"),
+    "icu_los_days": ("ימים", "משך השהייה בטיפול נמרץ"),
+    "max_lactate_24h": ("mmol/L", "ערך הלקטט הסביר הגבוה ביותר בדם, מ-6 שעות לפני ועד 24 שעות אחרי הקבלה לטיפול נמרץ"),
+    "n_lactate_24h": ("מספר", "מספר תוצאות הלקטט בחלון הזמן"),
+    "max_creatinine_24h": ("mg/dL", "ערך הקריאטינין הסביר הגבוה ביותר בסרום באותו חלון זמן (ריק אם אין)"),
+    "in_hospital_death": ("0/1", "נפטר במהלך האשפוז (תוצאה ראשית)"),
+    "days_to_death_or_censor": ("ימים", f"ימים מהקבלה לטיפול נמרץ ועד הפטירה, עם צנזור ביום {FOLLOW_UP_DAYS}"),
+    "death_within_30d": ("0/1", f"נפטר תוך {FOLLOW_UP_DAYS} יום מהקבלה לטיפול נמרץ (תוצאה משנית)"),
 }
 
 
@@ -62,13 +62,13 @@ def run() -> pd.DataFrame:
     out = EXTRACT_DIR / f"{protocol['study_id']}_extract.csv"
     extract.to_csv(out, index=False)
 
-    lines = [f"# Data dictionary - {protocol['study_id']}", "",
-             f"File: `{out.name}` · {len(extract)} rows (one per patient) · {len(allowed)} variables", "",
-             "| Variable | Unit / values | Definition |", "|---|---|---|"]
+    lines = [f"# מילון נתונים (Data dictionary) - {protocol['study_id']}", "",
+             f"קובץ: `{out.name}` · {len(extract)} שורות (שורה לכל מטופל) · {len(allowed)} משתנים", "",
+             "| משתנה | יחידה / ערכים | הגדרה |", "|---|---|---|"]
     lines += [f"| `{v}` | {DICTIONARY[v][0]} | {DICTIONARY[v][1]} |" for v in allowed]
-    lines += ["", "Identifiers removed: hospital subject/admission/stay IDs, all calendar dates.",
-              "Re-identification key is held by the data team only."]
-    (EXTRACT_DIR / f"{protocol['study_id']}_data_dictionary.md").write_text("\n".join(lines), encoding="utf-8")
+    lines += ["", "מזהים שהוסרו: מזהי מטופל, אשפוז ושהייה של בית החולים, וכל התאריכים הקלנדריים.",
+              "מפתח הקישור לזיהוי חוזר (Re-identification key) נשמר אצל צוות הנתונים בלבד."]
+    (EXTRACT_DIR / f"{protocol['study_id']}_data_dictionary.md").write_text(rtl("\n".join(lines)), encoding="utf-8")
     print(f"  extract: {len(extract)} rows x {len(allowed)} variables -> {out.relative_to(EXTRACT_DIR.parents[1])}")
     return extract
 

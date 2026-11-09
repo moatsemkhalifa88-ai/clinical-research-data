@@ -14,7 +14,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from common import FIGURES, REPORTS, apply_criteria, candidate_stays, connect, load_protocol, md_table
+from common import FIGURES, REPORTS, apply_criteria, candidate_stays, connect, he, load_protocol, md_table, rtl
 
 MIN_EVENTS_PER_VARIABLE = 10   # common rule of thumb for logistic regression
 
@@ -26,14 +26,14 @@ def flow_figure(flow: list[dict], path) -> None:
     for i, step in enumerate(flow):
         y = n - 1 - i
         ax.add_patch(plt.Rectangle((0.05, y + 0.15), 0.6, 0.7, fc="#e8eef7", ec="#1f3864", lw=1.2))
-        ax.text(0.35, y + 0.6, step["step"], ha="center", va="center", fontsize=9.5, weight="bold")
-        ax.text(0.35, y + 0.35, f"{step['stays']} stays · {step['patients']} patients",
+        ax.text(0.35, y + 0.6, he(step["step"]), ha="center", va="center", fontsize=9.5, weight="bold")
+        ax.text(0.35, y + 0.35, he(f"{step['stays']} אשפוזים · {step['patients']} מטופלים"),
                 ha="center", va="center", fontsize=9)
         if i > 0:
             ax.annotate("", xy=(0.35, y + 0.85), xytext=(0.35, y + 1.15),
                         arrowprops=dict(arrowstyle="->", color="#1f3864"))
             if step["excluded"]:
-                ax.text(0.7, y + 1.0, f"excluded: {step['excluded']}", va="center",
+                ax.text(0.7, y + 1.0, he(f"הוצאו: {step['excluded']}"), va="center",
                         fontsize=8.5, color="#a33")
     ax.set_xlim(0, 1)
     ax.set_ylim(0, n)
@@ -56,68 +56,69 @@ def run() -> dict:
     epv = events / n_params if n_params else float("nan")
 
     completeness = pd.DataFrame({
-        "variable": ["age", "sex", "max_lactate_24h", "max_creatinine_24h", "in_hospital_death", "dod (30-day outcome)"],
-        "available": [cohort.age.notna().sum(), cohort.sex.notna().sum(), cohort.max_lactate_24h.notna().sum(),
-                      cohort.max_creatinine_24h.notna().sum(), cohort.in_hospital_death.notna().sum(), n],
+        "משתנה": ["age", "sex", "max_lactate_24h", "max_creatinine_24h", "in_hospital_death", "dod (תוצאת 30 יום)"],
+        "זמינים": [cohort.age.notna().sum(), cohort.sex.notna().sum(), cohort.max_lactate_24h.notna().sum(),
+                   cohort.max_creatinine_24h.notna().sum(), cohort.in_hospital_death.notna().sum(), n],
     })
-    completeness["% complete"] = (100 * completeness.available / max(n, 1)).round(1)
+    completeness["% שלמות"] = (100 * completeness["זמינים"] / max(n, 1)).round(1)
 
     if n == 0 or events == 0:
-        verdict = "NOT FEASIBLE - no eligible patients or no outcome events."
+        verdict = "לא ישים: אין מטופלים שעומדים בקריטריונים, או שאין אירועי תוצאה."
     elif epv < MIN_EVENTS_PER_VARIABLE:
-        verdict = (f"FEASIBLE WITH LIMITATIONS - {events} events for {n_params} model terms "
-                   f"({epv:.1f} events per variable, below the usual {MIN_EVENTS_PER_VARIABLE}). "
-                   "Recommend a reduced model (exposure + age), exact/penalised methods, "
-                   "or running the study on the full MIMIC-IV database.")
+        verdict = (f"ישים בהסתייגויות: יש רק {events} אירועים ל-{n_params} משתנים במודל, כלומר "
+                   f"{epv:.1f} אירועים למשתנה (Events per variable, EPV), הרבה מתחת לסף המקובל של "
+                   f"{MIN_EVENTS_PER_VARIABLE}. ההמלצה היא לצמצם את המודל (חשיפה + גיל), להשתמש בשיטה "
+                   "מדויקת או ברגרסיה עם ענישה (Firth), או להריץ את המחקר על מאגר MIMIC-IV המלא.")
     else:
-        verdict = f"FEASIBLE - {events} events support a {n_params}-term model ({epv:.1f} EPV)."
+        verdict = (f"ישים: {events} אירועים מספיקים למודל עם {n_params} משתנים "
+                   f"({epv:.1f} אירועים למשתנה, EPV).")
 
     FIGURES.mkdir(parents=True, exist_ok=True)
     flow_figure(flow, FIGURES / "cohort_flow.png")
 
-    flow_df = pd.DataFrame(flow).rename(columns={"step": "Step", "stays": "ICU stays",
-                                                 "patients": "Patients", "excluded": "Excluded at this step"})
-    report = f"""# Feasibility check - {protocol['study_id']}
+    flow_df = pd.DataFrame(flow).rename(columns={"step": "שלב", "stays": "אשפוזים בטיפול נמרץ (ICU)",
+                                                 "patients": "מטופלים", "excluded": "הוצאו בשלב זה"})
+    report = f"""# בדיקת היתכנות (Feasibility) - {protocol['study_id']}
 
-**Study:** {protocol['title']}
-**Requested by:** {protocol['principal_investigator']}
-**Checked on:** {date.today().isoformat()} · **Source:** MIMIC-IV Clinical Database Demo v2.2
+**המחקר:** {protocol['title']}
+**מבקש הבדיקה:** {protocol['principal_investigator']}
+**תאריך הבדיקה:** {date.today().isoformat()} · **מקור הנתונים:** MIMIC-IV Clinical Database Demo v2.2
 
-## Verdict
+## המלצה (Verdict)
 
 **{verdict}**
 
-## Cohort flow
+## זרימת הקוהורט (Cohort flow)
 
 {md_table(flow_df)}
 
-![Cohort flow](figures/cohort_flow.png)
+![זרימת הקוהורט](figures/cohort_flow.png)
 
-## Exposure and outcome
+## חשיפה ותוצאה
 
-| Measure | Value |
+| מדד | ערך |
 |---|---|
-| Eligible patients | {n} |
-| Lactate > {thr} mmol/L in first 24 h | {high} ({100*high/max(n,1):.0f}%) |
-| In-hospital deaths (primary outcome) | {events} ({100*events/max(n,1):.0f}%) |
-| Model terms planned (exposure + covariates) | {n_params} |
-| Events per variable | {epv:.1f} (rule of thumb: >= {MIN_EVENTS_PER_VARIABLE}) |
+| מטופלים שעומדים בקריטריונים | {n} |
+| לקטט > {thr} mmol/L ב-24 השעות הראשונות | {high} ({100*high/max(n,1):.0f}%) |
+| פטירות במהלך האשפוז (תוצאה ראשית) | {events} ({100*events/max(n,1):.0f}%) |
+| משתנים מתוכננים במודל (חשיפה + משתנים מתקננים) | {n_params} |
+| אירועים למשתנה (EPV) | {epv:.1f} (כלל אצבע: {MIN_EVENTS_PER_VARIABLE} לפחות) |
 
-## Variable completeness in the eligible cohort
+## שלמות המשתנים בקוהורט
 
 {md_table(completeness)}
 
-## Notes for the researcher
+## הערות לחוקר
 
-- Lactate is taken from blood-gas results (itemid {protocol['exposure']['lab_itemid']}); values outside
-  {protocol['exposure']['plausible_range']} {protocol['exposure']['unit']} are rejected as implausible
-  ({int(candidates.n_lactate_rejected.sum())} result(s) rejected across all stays).
-- Labs are matched by patient and time window, because results drawn in the ED before admission
-  often have no admission ID.
-- Only the first ICU stay per patient is used, so each patient appears once.
+- ערכי הלקטט נלקחים מבדיקות גזים בדם (itemid {protocol['exposure']['lab_itemid']}). ערכים מחוץ לטווח
+  {protocol['exposure']['plausible_range']} {protocol['exposure']['unit']} נפסלים כבלתי סבירים
+  (בסך הכול נפסלו {int(candidates.n_lactate_rejected.sum())} תוצאות בכל האשפוזים).
+- בדיקות המעבדה מותאמות לפי מטופל וחלון זמן, ולא לפי מספר אשפוז: בדיקות שנלקחו במיון לפני הקבלה
+  לאשפוז הן לעיתים קרובות ללא מספר אשפוז, וצירוף לפיו היה משמיט אותן בשקט.
+- נכלל רק האשפוז הראשון של כל מטופל בטיפול נמרץ, כך שכל מטופל מופיע פעם אחת והתצפיות בלתי תלויות.
 """
     REPORTS.mkdir(parents=True, exist_ok=True)
-    (REPORTS / "01_feasibility.md").write_text(report, encoding="utf-8")
+    (REPORTS / "01_feasibility.md").write_text(rtl(report), encoding="utf-8")
     print(f"  feasibility: {n} eligible patients, {events} events, EPV {epv:.1f}")
     return {"n": n, "events": events, "epv": epv}
 

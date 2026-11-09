@@ -1,51 +1,53 @@
-# Data validation - EMK-2026-014
+<div dir="rtl">
 
-**Result: READY TO RELEASE**
+# בדיקת תקינות נתונים (Data validation) - EMK-2026-014
 
-WARN items are documented for the researcher; they do not block release because the
-extraction already handles them (e.g. implausible values are excluded by the protocol ranges).
+**תוצאה: מוכן למסירה (READY TO RELEASE)**
 
-## Source database checks (15 pass · 1 warn · 0 fail)
+פריטים בסטטוס WARN (אזהרה) מתועדים לחוקר, אבל לא חוסמים את המסירה, כי שלב החילוץ כבר מטפל בהם
+(למשל, ערכים בלתי סבירים מוחרגים לפי הטווחים שבפרוטוקול). כל פריט בסטטוס FAIL (כשל) חוסם את המסירה.
 
-> **Note on the time-order warning:** 0 ICU stay(s) start before the admission and 14 end after hospital discharge (up to 27.0 h). Late ICU out-times are a known documentation lag in the source system. The protocol only uses the first 24 h after ICU admission, so the extract is not affected.
+## בדיקות על מאגר המקור (15 עברו · 1 אזהרות · 0 נכשלו)
 
-| area | check | problems | status |
+> **הערה לגבי האזהרה בסדר הזמנים:** 0 שהיות בטיפול נמרץ (ICU) מתחילות לפני האשפוז, ו-14 מסתיימות אחרי השחרור מבית החולים (עד 27.0 שעות). זמני יציאה מאוחרים מטיפול נמרץ הם עיכוב תיעוד מוכר במערכת המקור. הפרוטוקול משתמש רק ב-24 השעות הראשונות אחרי הקבלה לטיפול נמרץ, ולכן הקובץ שנמסר לא מושפע.
+
+| תחום | בדיקה | שורות עם בעיה | תוצאה |
 |---|---|---|---|
-| Keys | `patients.subject_id` is unique | 0 | PASS |
-| Keys | `admissions.hadm_id` is unique | 0 | PASS |
-| Keys | `icustays.stay_id` is unique | 0 | PASS |
-| Referential | every ICU stay links to an admission | 0 | PASS |
-| Referential | every admission links to a patient | 0 | PASS |
-| Time order | admission ends after it starts | 0 | PASS |
-| Time order | ICU stay ends after it starts | 0 | PASS |
-| Time order | ICU stay falls inside its admission (1 h tolerance) | 14 | WARN |
-| Consistency | death flag matches recorded death time | 0 | PASS |
-| Consistency | in-hospital deaths have a date of death | 0 | PASS |
-| Units | Lactate results all in mmol/L | 0 | PASS |
-| Ranges | Lactate values inside [0.1, 30] | 0 | PASS |
-| Ranges | Lactate results have a numeric value | 0 | PASS |
-| Units | Creatinine results all in mg/dL | 0 | PASS |
-| Ranges | Creatinine values inside [0.1, 25] | 0 | PASS |
-| Ranges | Creatinine results have a numeric value | 0 | PASS |
+| מפתחות | `patients.subject_id` ייחודי | 0 | PASS |
+| מפתחות | `admissions.hadm_id` ייחודי | 0 | PASS |
+| מפתחות | `icustays.stay_id` ייחודי | 0 | PASS |
+| שלמות קישורים | כל שהייה בטיפול נמרץ מקושרת לאשפוז | 0 | PASS |
+| שלמות קישורים | כל אשפוז מקושר למטופל | 0 | PASS |
+| סדר זמנים | האשפוז מסתיים אחרי שהוא מתחיל | 0 | PASS |
+| סדר זמנים | השהייה בטיפול נמרץ מסתיימת אחרי שהיא מתחילה | 0 | PASS |
+| סדר זמנים | השהייה בטיפול נמרץ בתוך תקופת האשפוז (סטייה של עד שעה) | 14 | WARN |
+| עקביות | דגל הפטירה תואם לזמן הפטירה הרשום | 0 | PASS |
+| עקביות | לכל פטירה באשפוז יש תאריך פטירה | 0 | PASS |
+| יחידות | כל תוצאות הלקטט ביחידות mmol/L | 0 | PASS |
+| טווחים | ערכי הלקטט בטווח [0.1, 30] | 0 | PASS |
+| טווחים | לכל תוצאות הלקטט יש ערך מספרי | 0 | PASS |
+| יחידות | כל תוצאות הקריאטינין ביחידות mg/dL | 0 | PASS |
+| טווחים | ערכי הקריאטינין בטווח [0.1, 25] | 0 | PASS |
+| טווחים | לכל תוצאות הקריאטינין יש ערך מספרי | 0 | PASS |
 
-## Extract checks (10 pass · 0 warn · 0 fail)
+## בדיקות על קובץ החילוץ (Extract) (10 עברו · 0 אזהרות · 0 נכשלו)
 
-| area | check | problems | status |
+| תחום | בדיקה | שורות עם בעיה | תוצאה |
 |---|---|---|---|
-| Structure | only approved variables, in protocol order | 0 | PASS |
-| Privacy | no hospital identifiers or calendar dates | 0 | PASS |
-| Privacy | ages above 89 are grouped | 0 | PASS |
-| Structure | one row per patient | 0 | PASS |
-| Ranges | age between 18 and 89 | 0 | PASS |
-| Ranges | exposure inside [0.1, 30] | 0 | PASS |
-| Ranges | follow-up days between 0 and 30 | 0 | PASS |
-| Consistency | 30-day deaths have follow-up < 30 days or die on day 30 | 0 | PASS |
-| Completeness | primary outcome has no missing values | 0 | PASS |
-| Completeness | creatinine available (covariate) | 0 | PASS |
+| מבנה | רק משתנים מאושרים, לפי סדר הפרוטוקול | 0 | PASS |
+| פרטיות | אין מזהי בית חולים ואין תאריכים קלנדריים | 0 | PASS |
+| פרטיות | גילאים מעל 89 מקובצים | 0 | PASS |
+| מבנה | שורה אחת לכל מטופל | 0 | PASS |
+| טווחים | גיל בין 18 ל-89 | 0 | PASS |
+| טווחים | החשיפה בטווח [0.1, 30] | 0 | PASS |
+| טווחים | ימי מעקב בין 0 ל-30 | 0 | PASS |
+| עקביות | לפטירות תוך 30 יום יש מעקב של 30 יום לכל היותר | 0 | PASS |
+| שלמות | אין ערכים חסרים בתוצאה הראשית | 0 | PASS |
+| שלמות | קריאטינין זמין (משתנה מתקנן) | 0 | PASS |
 
-## Missing values in the extract
+## ערכים חסרים בקובץ החילוץ
 
-| variable | % missing |
+| משתנה | % חסרים |
 |---|---|
 | study_id | 0.0 |
 | age | 0.0 |
@@ -59,3 +61,5 @@ extraction already handles them (e.g. implausible values are excluded by the pro
 | in_hospital_death | 0.0 |
 | days_to_death_or_censor | 0.0 |
 | death_within_30d | 0.0 |
+
+</div>

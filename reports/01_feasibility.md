@@ -1,51 +1,55 @@
-# Feasibility check - EMK-2026-014
+<div dir="rtl">
 
-**Study:** Early hyperlactatemia and in-hospital mortality in adult ICU patients
-**Requested by:** Dr. A. Researcher (fictional)
-**Checked on:** 2026-10-29 · **Source:** MIMIC-IV Clinical Database Demo v2.2
+# בדיקת היתכנות (Feasibility) - EMK-2026-014
 
-## Verdict
+**המחקר:** Early hyperlactatemia and in-hospital mortality in adult ICU patients
+**מבקש הבדיקה:** Dr. A. Researcher (fictional)
+**תאריך הבדיקה:** 2026-11-09 · **מקור הנתונים:** MIMIC-IV Clinical Database Demo v2.2
 
-**FEASIBLE WITH LIMITATIONS - 7 events for 4 model terms (1.8 events per variable, below the usual 10). Recommend a reduced model (exposure + age), exact/penalised methods, or running the study on the full MIMIC-IV database.**
+## המלצה (Verdict)
 
-## Cohort flow
+**ישים בהסתייגויות: יש רק 7 אירועים ל-4 משתנים במודל, כלומר 1.8 אירועים למשתנה (Events per variable, EPV), הרבה מתחת לסף המקובל של 10. ההמלצה היא לצמצם את המודל (חשיפה + גיל), להשתמש בשיטה מדויקת או ברגרסיה עם ענישה (Firth), או להריץ את המחקר על מאגר MIMIC-IV המלא.**
 
-| Step | ICU stays | Patients | Excluded at this step |
+## זרימת הקוהורט (Cohort flow)
+
+| שלב | אשפוזים בטיפול נמרץ (ICU) | מטופלים | הוצאו בשלב זה |
 |---|---|---|---|
-| All ICU stays in the database | 140 | 100 | 0 |
-| Age >= 18 | 140 | 100 | 0 |
-| First ICU stay of the patient | 100 | 100 | 40 |
-| ICU length of stay >= 24 h | 85 | 85 | 15 |
-| Lactate measured (-6 h to +24 h) | 67 | 67 | 18 |
+| כל האשפוזים בטיפול נמרץ במאגר | 140 | 100 | 0 |
+| גיל 18 ומעלה | 140 | 100 | 0 |
+| אשפוז ראשון של המטופל בטיפול נמרץ | 100 | 100 | 40 |
+| שהייה בטיפול נמרץ של 24 שעות לפחות | 85 | 85 | 15 |
+| נמדד לקטט (6 שעות לפני עד 24 שעות אחרי הקבלה) | 67 | 67 | 18 |
 
-![Cohort flow](figures/cohort_flow.png)
+![זרימת הקוהורט](figures/cohort_flow.png)
 
-## Exposure and outcome
+## חשיפה ותוצאה
 
-| Measure | Value |
+| מדד | ערך |
 |---|---|
-| Eligible patients | 67 |
-| Lactate > 2.0 mmol/L in first 24 h | 47 (70%) |
-| In-hospital deaths (primary outcome) | 7 (10%) |
-| Model terms planned (exposure + covariates) | 4 |
-| Events per variable | 1.8 (rule of thumb: >= 10) |
+| מטופלים שעומדים בקריטריונים | 67 |
+| לקטט > 2.0 mmol/L ב-24 השעות הראשונות | 47 (70%) |
+| פטירות במהלך האשפוז (תוצאה ראשית) | 7 (10%) |
+| משתנים מתוכננים במודל (חשיפה + משתנים מתקננים) | 4 |
+| אירועים למשתנה (EPV) | 1.8 (כלל אצבע: 10 לפחות) |
 
-## Variable completeness in the eligible cohort
+## שלמות המשתנים בקוהורט
 
-| variable | available | % complete |
+| משתנה | זמינים | % שלמות |
 |---|---|---|
 | age | 67 | 100.0 |
 | sex | 67 | 100.0 |
 | max_lactate_24h | 67 | 100.0 |
 | max_creatinine_24h | 67 | 100.0 |
 | in_hospital_death | 67 | 100.0 |
-| dod (30-day outcome) | 67 | 100.0 |
+| dod (תוצאת 30 יום) | 67 | 100.0 |
 
-## Notes for the researcher
+## הערות לחוקר
 
-- Lactate is taken from blood-gas results (itemid 50813); values outside
-  [0.1, 30] mmol/L are rejected as implausible
-  (0 result(s) rejected across all stays).
-- Labs are matched by patient and time window, because results drawn in the ED before admission
-  often have no admission ID.
-- Only the first ICU stay per patient is used, so each patient appears once.
+- ערכי הלקטט נלקחים מבדיקות גזים בדם (itemid 50813). ערכים מחוץ לטווח
+  [0.1, 30] mmol/L נפסלים כבלתי סבירים
+  (בסך הכול נפסלו 0 תוצאות בכל האשפוזים).
+- בדיקות המעבדה מותאמות לפי מטופל וחלון זמן, ולא לפי מספר אשפוז: בדיקות שנלקחו במיון לפני הקבלה
+  לאשפוז הן לעיתים קרובות ללא מספר אשפוז, וצירוף לפיו היה משמיט אותן בשקט.
+- נכלל רק האשפוז הראשון של כל מטופל בטיפול נמרץ, כך שכל מטופל מופיע פעם אחת והתצפיות בלתי תלויות.
+
+</div>

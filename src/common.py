@@ -1,11 +1,37 @@
-"""Shared helpers: protocol loading, database connection, candidate query."""
+"""Shared helpers: protocol loading, database connection, candidate query,
+Hebrew text for matplotlib."""
 from __future__ import annotations
 
 import sqlite3
 from pathlib import Path
 
+import matplotlib
+import matplotlib.ft2font
 import pandas as pd
 import yaml
+from bidi.algorithm import get_display
+
+# DejaVu Sans ships with matplotlib and includes Hebrew glyphs, so figures
+# render the same on every machine (and in CI).
+matplotlib.rcParams["font.family"] = "DejaVu Sans"
+
+# matplotlib >= 3.11 lays text out with libraqm, which applies the bidi algorithm
+# itself. Reordering on top of that would reverse the Hebrew a second time.
+MPL_HAS_BIDI = bool(getattr(matplotlib.ft2font, "__libraqm_version__", None))
+
+
+def he(text: str) -> str:
+    """Hebrew text for matplotlib, displayed right to left.
+
+    Older matplotlib draws characters strictly left to right, so the text is
+    reordered with python-bidi; newer matplotlib (libraqm) does it natively.
+    Use ONLY for strings passed to matplotlib. Markdown (GitHub) and Power BI
+    apply the bidi algorithm themselves; reordering there would reverse the text.
+    """
+    text = str(text)
+    if MPL_HAS_BIDI:
+        return text
+    return "\n".join(get_display(line) for line in text.split("\n"))
 
 ROOT = Path(__file__).resolve().parents[1]
 DB_PATH = ROOT / "data" / "mimic_demo.db"
@@ -53,10 +79,10 @@ def candidate_stays(con: sqlite3.Connection, protocol: dict) -> pd.DataFrame:
 
 # Sequential inclusion steps, in the order a flow diagram shows them
 CRITERIA = [
-    ("c_adult", "Age >= {min_age}"),
-    ("c_first_stay", "First ICU stay of the patient"),
-    ("c_los", "ICU length of stay >= {min_icu_los_hours} h"),
-    ("c_lactate_measured", "Lactate measured (-{lab_window_hours_before_icu} h to +{lab_window_hours_after_icu} h)"),
+    ("c_adult", "גיל {min_age} ומעלה"),
+    ("c_first_stay", "אשפוז ראשון של המטופל בטיפול נמרץ"),
+    ("c_los", "שהייה בטיפול נמרץ של {min_icu_los_hours} שעות לפחות"),
+    ("c_lactate_measured", "נמדד לקטט ({lab_window_hours_before_icu} שעות לפני עד {lab_window_hours_after_icu} שעות אחרי הקבלה)"),
 ]
 
 
@@ -66,7 +92,7 @@ def apply_criteria(df: pd.DataFrame, protocol: dict) -> tuple[pd.DataFrame, list
     labels = {"min_age": pop["min_age"], "min_icu_los_hours": pop["min_icu_los_hours"],
               "lab_window_hours_before_icu": pop["lab_window_hours_before_icu"],
               "lab_window_hours_after_icu": pop["lab_window_hours_after_icu"]}
-    flow = [{"step": "All ICU stays in the database", "stays": len(df),
+    flow = [{"step": "כל האשפוזים בטיפול נמרץ במאגר", "stays": len(df),
              "patients": df.subject_id.nunique(), "excluded": 0}]
     current = df
     for col, label in CRITERIA:
@@ -75,6 +101,15 @@ def apply_criteria(df: pd.DataFrame, protocol: dict) -> tuple[pd.DataFrame, list
                      "patients": kept.subject_id.nunique(), "excluded": len(current) - len(kept)})
         current = kept
     return current.copy(), flow
+
+
+def rtl(markdown: str) -> str:
+    """Wrap a Markdown document for right-to-left display on GitHub.
+
+    The blank lines inside the div are required: without them GitHub does not
+    render the Markdown (headings, tables, images) inside the HTML block.
+    """
+    return f'<div dir="rtl">\n\n{markdown.strip()}\n\n</div>\n'
 
 
 def md_table(df: pd.DataFrame) -> str:

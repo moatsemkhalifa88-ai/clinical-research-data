@@ -1,21 +1,25 @@
-# Data dictionary - EMK-2026-014
+<div dir="rtl">
 
-File: `EMK-2026-014_extract.csv` · 67 rows (one per patient) · 12 variables
+# מילון נתונים (Data dictionary) - EMK-2026-014
 
-| Variable | Unit / values | Definition |
+קובץ: `EMK-2026-014_extract.csv` · 67 שורות (שורה לכל מטופל) · 12 משתנים
+
+| משתנה | יחידה / ערכים | הגדרה |
 |---|---|---|
-| `study_id` | text | Study-specific patient ID (no link to hospital IDs in this file) |
-| `age` | years | Age at ICU admission; values above 89 are set to 89 |
-| `sex` | F/M | Sex as recorded |
-| `admission_type` | text | Hospital admission type (e.g. EW EMER., URGENT, ELECTIVE) |
-| `first_careunit` | text | First ICU care unit |
-| `icu_los_days` | days | ICU length of stay |
-| `max_lactate_24h` | mmol/L | Highest plausible blood lactate from -6 h to +24 h of ICU admission |
-| `n_lactate_24h` | count | Number of lactate results in the window |
-| `max_creatinine_24h` | mg/dL | Highest plausible serum creatinine in the same window (blank if none) |
-| `in_hospital_death` | 0/1 | Died during the hospital admission (primary outcome) |
-| `days_to_death_or_censor` | days | Days from ICU admission to death, censored at 30 |
-| `death_within_30d` | 0/1 | Died within 30 days of ICU admission (secondary outcome) |
+| `study_id` | טקסט | מזהה מטופל ייעודי למחקר (בקובץ זה אין קישור למזהי בית החולים) |
+| `age` | שנים | גיל בקבלה לטיפול נמרץ (ICU); גילאים מעל 89 מוצגים כ-89 |
+| `sex` | F/M | מין, כפי שתועד |
+| `admission_type` | טקסט | סוג הקבלה לאשפוז (למשל EW EMER., URGENT, ELECTIVE) |
+| `first_careunit` | טקסט | יחידת הטיפול הנמרץ הראשונה |
+| `icu_los_days` | ימים | משך השהייה בטיפול נמרץ |
+| `max_lactate_24h` | mmol/L | ערך הלקטט הסביר הגבוה ביותר בדם, מ-6 שעות לפני ועד 24 שעות אחרי הקבלה לטיפול נמרץ |
+| `n_lactate_24h` | מספר | מספר תוצאות הלקטט בחלון הזמן |
+| `max_creatinine_24h` | mg/dL | ערך הקריאטינין הסביר הגבוה ביותר בסרום באותו חלון זמן (ריק אם אין) |
+| `in_hospital_death` | 0/1 | נפטר במהלך האשפוז (תוצאה ראשית) |
+| `days_to_death_or_censor` | ימים | ימים מהקבלה לטיפול נמרץ ועד הפטירה, עם צנזור ביום 30 |
+| `death_within_30d` | 0/1 | נפטר תוך 30 יום מהקבלה לטיפול נמרץ (תוצאה משנית) |
 
-Identifiers removed: hospital subject/admission/stay IDs, all calendar dates.
-Re-identification key is held by the data team only.
+מזהים שהוסרו: מזהי מטופל, אשפוז ושהייה של בית החולים, וכל התאריכים הקלנדריים.
+מפתח הקישור לזיהוי חוזר (Re-identification key) נשמר אצל צוות הנתונים בלבד.
+
+</div>
