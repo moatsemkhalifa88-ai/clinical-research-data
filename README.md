@@ -1,37 +1,41 @@
+<div dir="rtl">
+
+🌐 **עברית** | [English](README.en.md)
+
 # 🏥 Clinical Research Data Desk
 
-**An end-to-end research-data workflow on real (de-identified) hospital data**: a feasibility check for a research proposal, protocol-driven SQL extraction with de-identification, automated data validation, a statistical analysis, and a Power BI dashboard on a star-schema model, in Python, SQL and DAX.
+**תהליך עבודה מלא על נתוני מחקר, על נתוני בית חולים אמיתיים (לאחר הסרת מזהים)**: בדיקת היתכנות (Feasibility) להצעת מחקר, חילוץ נתונים ב-SQL לפי פרוטוקול כולל הסרת מזהים (De-identification), בדיקות תקינות נתונים אוטומטיות (Data validation), ניתוח סטטיסטי, ודשבורד Power BI על מודל סכמת כוכב (Star schema). הכול ב-Python, SQL ו-DAX.
 
-It reproduces the work of a hospital research-data analyst: a researcher submits a study protocol, and the data team checks whether the study is feasible, extracts exactly the approved data, validates it and supports the analysis.
+הפרויקט משחזר את העבודה של אנליסט נתוני מחקר בבית חולים: חוקר מגיש פרוטוקול מחקר, וצוות הנתונים בודק אם המחקר ישים, מחלץ בדיוק את הנתונים שאושרו, מוודא את תקינותם ותומך בניתוח.
 
-**Data:** [MIMIC-IV Clinical Database Demo v2.2](https://physionet.org/content/mimic-iv-demo/2.2/) – 100 de-identified ICU patients from Beth Israel Deaconess Medical Center (275 admissions, 140 ICU stays, 107,727 lab results).
+**נתונים:** [MIMIC-IV Clinical Database Demo v2.2](https://physionet.org/content/mimic-iv-demo/2.2/): 100 מטופלי טיפול נמרץ (ICU) לאחר הסרת מזהים, מהמרכז הרפואי Beth Israel Deaconess (275 אשפוזים, 140 שהיות בטיפול נמרץ, 107,727 תוצאות מעבדה).
 
-![Power BI dashboard - study overview](reports/figures/powerbi_overview.png)
+![דשבורד Power BI - סקירת המחקר](reports/figures/powerbi_overview.png)
 
 ---
 
-## The study request
+## בקשת המחקר
 
-> **EMK-2026-014 (fictional proposal, written for this portfolio project):** Is a high blood lactate in the first 24 hours of an ICU stay associated with in-hospital mortality, after adjusting for age and sex?
+> **EMK-2026-014 (הצעת מחקר פיקטיבית, שנכתבה עבור פרויקט תיק העבודות הזה):** האם רמת לקטט גבוהה בדם ב-24 השעות הראשונות של שהייה בטיפול נמרץ קשורה לתמותה במהלך האשפוז, לאחר תקנון לגיל ולמין?
 
-The whole protocol (inclusion criteria, lab item IDs, time windows, plausible ranges, approved variables) lives in [`protocol/lactate_mortality.yaml`](protocol/lactate_mortality.yaml). No parameter is hard-coded in the SQL or Python, so a new study means a new YAML file.
+הפרוטוקול כולו (קריטריוני הכללה, מזהי בדיקות מעבדה, חלונות זמן, טווחים סבירים ומשתנים מאושרים) נמצא בקובץ [`protocol/lactate_mortality.yaml`](protocol/lactate_mortality.yaml). אף פרמטר לא מקודד ישירות ב-SQL או ב-Python, כך שמחקר חדש פירושו קובץ YAML חדש.
 
-## Workflow and results
+## תהליך העבודה והתוצאות
 
-| Step | What it does | Output |
+| שלב | מה הוא עושה | תוצר |
 |---|---|---|
-| **1. Feasibility** | Applies the criteria one by one, counts patients and outcome events, checks events-per-variable and completeness, gives a verdict | [`01_feasibility.md`](reports/01_feasibility.md) |
-| **2. Extraction** | One parameterised SQL query, then de-identification: study IDs replace hospital IDs (linkage key kept apart), dates become "days from ICU admission", ages over 89 grouped, only approved variables leave (minimum necessary) | extract CSV + [data dictionary](data/extract/EMK-2026-014_data_dictionary.md) |
-| **3. Validation** | 26 automated checks on the source (keys, referential integrity, time order, units, ranges) and on the extract (privacy, structure, ranges). Any FAIL blocks release | [`02_validation.md`](reports/02_validation.md) |
-| **4. Analysis** | Runs only on the delivered extract: Table 1 with significance tests, mortality by lactate band, ML and Firth logistic regression, Kaplan-Meier with log-rank test | [`03_analysis.md`](reports/03_analysis.md) |
-| **5. BI export** | Builds a small star schema (patient fact + lactate-band, age-band and ICU-unit dimensions, plus cohort-flow and validation-log tables) for the dashboard. Bands and labels are decided once, in Python, so Power BI only aggregates | `bi/data/*.csv` → [Power BI project](bi/) |
+| **1. בדיקת היתכנות** | מפעיל את הקריטריונים אחד אחרי השני, סופר מטופלים ואירועי תוצאה, בודק אירועים למשתנה (EPV) ושלמות נתונים, ונותן המלצה | [`01_feasibility.md`](reports/01_feasibility.md) |
+| **2. חילוץ** | שאילתת SQL אחת עם פרמטרים, ואחריה הסרת מזהים: מזהי מחקר מחליפים את מזהי בית החולים (מפתח הקישור נשמר בנפרד), תאריכים הופכים ל"ימים מהקבלה לטיפול נמרץ", גילאים מעל 89 מקובצים, ורק המשתנים שאושרו יוצאים (עיקרון המינימום ההכרחי, Minimum necessary) | קובץ CSV + [מילון נתונים](data/extract/EMK-2026-014_data_dictionary.md) |
+| **3. בדיקות תקינות** | 26 בדיקות אוטומטיות על מאגר המקור (מפתחות, שלמות קישורים, סדר זמנים, יחידות, טווחים) ועל קובץ החילוץ (פרטיות, מבנה, טווחים). כל FAIL חוסם את המסירה | [`02_validation.md`](reports/02_validation.md) |
+| **4. ניתוח** | רץ רק על קובץ החילוץ שנמסר: טבלה 1 (Table 1) עם מבחני מובהקות, תמותה לפי טווח לקטט, רגרסיה לוגיסטית (Logistic regression) בשיטת נראות מרבית (ML) ובשיטת Firth, ועקומות Kaplan-Meier עם מבחן log-rank | [`03_analysis.md`](reports/03_analysis.md) |
+| **5. ייצוא ל-BI** | בונה סכמת כוכב קטנה (טבלת עובדות של מטופלים + ממדים של טווח לקטט, קבוצת גיל ויחידת טיפול נמרץ, ועוד טבלאות של זרימת הקוהורט ושל יומן הבדיקות) עבור הדשבורד. הטווחים והתוויות נקבעים פעם אחת, ב-Python, ו-Power BI רק מבצע אגרגציה | `bi/data/*.csv` ← [פרויקט Power BI](bi/) |
 
-### Key findings
+### ממצאים עיקריים
 
-- **Feasibility:** 100 patients → **67 eligible** (first ICU stay, ≥ 24 h, lactate measured). Only **7 in-hospital deaths**, 1.8 events per model term, so the verdict is *feasible with limitations*: a reduced model and Firth's penalised regression were used.
-- **Dose-response:** in-hospital mortality was **5%** with lactate ≤ 2, **9%** at 2–4 and **21%** above 4 mmol/L.
-- **Adjusted model:** each extra 1 mmol/L of lactate gave an OR of **1.30 (95% CI 0.97–1.74, p = 0.079)**. Lactate > 2: OR 2.36 (0.36–15.55). The direction matches the clinical literature, but the demo cohort is too small for significance.
-- **Validation:** 0 failures. One documented warning: 14 ICU stays end up to 27 h after hospital discharge (a documentation lag that does not affect the first-24 h window).
+- **היתכנות:** מתוך 100 מטופלים, **67 עומדים בקריטריונים** (שהייה ראשונה בטיפול נמרץ, 24 שעות לפחות, לקטט נמדד). יש רק **7 פטירות באשפוז**, כלומר 1.8 אירועים לכל משתנה במודל, ולכן ההמלצה היא *ישים בהסתייגויות*: נעשה שימוש במודל מצומצם וברגרסיה עם ענישה לפי Firth.
+- **יחס מינון-תגובה (Dose-response):** התמותה באשפוז הייתה **5%** כשהלקטט ≤ 2, **9%** בטווח 2–4 ו-**21%** מעל 4 mmol/L.
+- **מודל מתוקנן:** כל עלייה של 1 mmol/L בלקטט נתנה יחס סיכויים (OR) של **1.30 (רווח סמך 95% (95% CI) 0.97–1.74, p = 0.079)**. לקטט > 2: OR 2.36 (0.36–15.55). הכיוון תואם את הספרות הקלינית, אבל קוהורט (Cohort) הדמו קטן מכדי להגיע למובהקות.
+- **בדיקות תקינות:** 0 כשלים. אזהרה אחת מתועדת: 14 שהיות בטיפול נמרץ מסתיימות עד 27 שעות אחרי השחרור מבית החולים (עיכוב בתיעוד, שלא משפיע על חלון 24 השעות הראשונות).
 
 <p>
   <img src="reports/figures/cohort_flow.png" width="32%">
@@ -39,71 +43,81 @@ The whole protocol (inclusion criteria, lab item IDs, time windows, plausible ra
   <img src="reports/figures/km_30day.png" width="32%">
 </p>
 
-## Power BI dashboard
+## דשבורד Power BI
 
-A two-page report built as a **Power BI Project (PBIP)**, so the model and every measure are plain text and reviewable in git ([`bi/ClinicalResearchDesk.SemanticModel/definition/`](bi/ClinicalResearchDesk.SemanticModel/definition/)).
+דוח בן שני עמודים שנבנה כ-**Power BI Project (PBIP)**, כך שהמודל וכל ה-measures הם טקסט רגיל שאפשר לסקור ב-git ([`bi/ClinicalResearchDesk.SemanticModel/definition/`](bi/ClinicalResearchDesk.SemanticModel/definition/)).
 
-- **Model:** star schema with one-to-many relationships from `fact_patient` to three dimensions; band columns sorted by a hidden sort-order column, so "≤ 2 / 2–4 / > 4" never sorts alphabetically.
-- **20 DAX measures**, e.g. `Mortality %`, `Risk Ratio (High vs Normal)` (`CALCULATE` with filter arguments), `Retained %` for the cohort funnel (`REMOVEFILTERS`), and `Release Decision` from the validation log.
-- **A built-in caution:** the `Sample Size Note` measure warns when a slicer selection leaves fewer than 5 deaths, so the dashboard does not invite conclusions the data cannot support.
-- **Page 1, Study overview:** KPIs, mortality by lactate band and age band, lactate vs ICU stay per patient, outcomes table, slicers for sex, admission type and ICU unit.
-- **Page 2, Data quality:** all 26 validation checks, pass/warn/fail by area, the cohort funnel (100 → 67) and the release decision.
+- **מודל:** סכמת כוכב עם קשרי יחיד-לרבים (One-to-many) מ-`fact_patient` לשלושה ממדים. עמודות הטווחים ממוינות לפי עמודת סדר מוסתרת, כך ש"≤ 2 / 2–4 / > 4" אף פעם לא ממוינים לפי סדר אלפביתי.
+- **20 measures ב-DAX**, למשל `Mortality %`, `Risk Ratio (High vs Normal)` (`CALCULATE` עם ארגומנטים של סינון), `Retained %` למשפך הקוהורט (`REMOVEFILTERS`), ו-`Release Decision` מתוך יומן הבדיקות.
+- **אזהרה מובנית:** ה-measure `Sample Size Note` מתריע כשבחירה בסלייסרים משאירה פחות מ-5 פטירות, כדי שהדשבורד לא יזמין מסקנות שהנתונים לא יכולים לתמוך בהן.
+- **עמוד 1, סקירת המחקר:** מדדי מפתח (KPI), תמותה לפי טווח לקטט ולפי קבוצת גיל, לקטט מול משך השהייה בטיפול נמרץ לכל מטופל, טבלת תוצאות, וסלייסרים למין, לסוג הקבלה וליחידת הטיפול הנמרץ.
+- **עמוד 2, איכות נתונים:** כל 26 בדיקות התקינות, עבר/אזהרה/נכשל לפי תחום, משפך הקוהורט (100 ← 67) והחלטת המסירה.
 
-![Power BI dashboard - data quality](reports/figures/powerbi_quality.png)
+![דשבורד Power BI - איכות נתונים](reports/figures/powerbi_quality.png)
 
-## Design decisions
+## החלטות תכנון
 
-- **Labs matched by patient + time window, not admission ID.** Results drawn in the ED before admission often have an empty `hadm_id`; joining on it would silently drop them.
-- **One ICU stay per patient** (the first), so observations are independent.
-- **Plausible-range filtering** in the SQL, with rejected values counted and reported, never silently dropped.
-- **Firth logistic regression** alongside standard maximum likelihood: with few events, standard estimates are biased away from 1 and can fail to converge.
-- **Analysis reads only the extract**, exactly like an external researcher, so every result can be reproduced from the delivered file.
-- **Statistics implemented with NumPy/SciPy** (logistic regression, Firth correction, Kaplan-Meier, log-rank, Wilson CI) and checked by [unit tests](tests/test_stats_utils.py) against independent references: scikit-learn, SciPy's log-rank and Wilson interval, a direct optimisation of Firth's penalised likelihood, and hand-worked examples. Tests run on every push (GitHub Actions).
+- **בדיקות מעבדה מותאמות לפי מטופל וחלון זמן, ולא לפי מזהה אשפוז.** לבדיקות שנלקחו במיון לפני הקבלה לאשפוז יש לעיתים קרובות `hadm_id` ריק, וצירוף לפיו היה משמיט אותן בשקט.
+- **שהייה אחת בטיפול נמרץ לכל מטופל** (הראשונה), כך שהתצפיות בלתי תלויות.
+- **סינון לפי טווח סביר** ב-SQL. ערכים שנפסלו נספרים ומדווחים, ואף פעם לא נמחקים בשקט.
+- **רגרסיה לוגיסטית לפי Firth** לצד נראות מרבית רגילה: כשיש מעט אירועים, האומדנים הרגילים מוטים הרחק מ-1 ולפעמים לא מתכנסים.
+- **הניתוח קורא רק את קובץ החילוץ**, בדיוק כמו חוקר חיצוני, כך שכל תוצאה ניתנת לשחזור מהקובץ שנמסר.
+- **הסטטיסטיקה מומשה ב-NumPy/SciPy** (רגרסיה לוגיסטית, תיקון Firth, Kaplan-Meier, log-rank, רווח סמך לפי Wilson) ונבדקת ב[בדיקות יחידה](tests/test_stats_utils.py) מול מקורות בלתי תלויים: scikit-learn, מבחן log-rank ורווח הסמך של Wilson ב-SciPy, אופטימיזציה ישירה של הנראות עם הענישה של Firth, ודוגמאות שחושבו ידנית. הבדיקות רצות בכל push (GitHub Actions).
 
-## Project structure
+## מבנה הפרויקט
+
+</div>
 
 ```
 clinical-research-data/
-├── protocol/lactate_mortality.yaml   # the research proposal as parameters
-├── sql/candidate_stays.sql           # parameterised cohort query, one flag per criterion
+├── protocol/lactate_mortality.yaml   # הצעת המחקר כפרמטרים
+├── sql/candidate_stays.sql           # שאילתת קוהורט עם פרמטרים, דגל לכל קריטריון
 ├── src/
-│   ├── load_data.py                  # 0. ZIP → SQLite (reads straight from the ZIP)
-│   ├── feasibility.py                # 1. criteria flow, events, EPV, verdict
-│   ├── extract.py                    # 2. de-identified, minimum-necessary extract
-│   ├── validate.py                   # 3. source + extract checks, release gate
-│   ├── analysis.py                   # 4. Table 1, regression, survival, figures
-│   ├── export_bi.py                  # 5. star schema for Power BI
-│   ├── stats_utils.py                # logistic / Firth / Kaplan-Meier / log-rank / Wilson
+│   ├── load_data.py                  # 0. ZIP → SQLite (קורא ישירות מה-ZIP)
+│   ├── feasibility.py                # 1. זרימת קריטריונים, אירועים, EPV, המלצה
+│   ├── extract.py                    # 2. חילוץ ללא מזהים, מינימום הכרחי
+│   ├── validate.py                   # 3. בדיקות על המקור ועל החילוץ, שער מסירה
+│   ├── analysis.py                   # 4. טבלה 1, רגרסיה, הישרדות, גרפים
+│   ├── export_bi.py                  # 5. סכמת כוכב ל-Power BI
+│   ├── stats_utils.py                # לוגיסטית / Firth / Kaplan-Meier / log-rank / Wilson
 │   └── common.py
 ├── bi/
-│   ├── ClinicalResearchDesk.pbip     # open in Power BI Desktop
-│   ├── ClinicalResearchDesk.SemanticModel/   # tables, relationships, DAX (TMDL)
-│   ├── ClinicalResearchDesk.Report/          # report pages (PBIR)
-│   ├── make_report.py                # generates the report pages from a layout spec
-│   └── data/                         # star-schema CSVs written by step 5
+│   ├── ClinicalResearchDesk.pbip     # לפתוח ב-Power BI Desktop
+│   ├── ClinicalResearchDesk.SemanticModel/   # טבלאות, קשרים, DAX (TMDL)
+│   ├── ClinicalResearchDesk.Report/          # עמודי הדוח (PBIR)
+│   ├── make_report.py                # מייצר את עמודי הדוח ממפרט פריסה
+│   └── data/                         # קובצי ה-CSV של סכמת הכוכב, נכתבים בשלב 5
 ├── tests/test_stats_utils.py
-├── reports/                          # generated reports and figures
+├── reports/                          # דוחות וגרפים שנוצרו
 └── run_pipeline.py
 ```
 
-## Run it
+<div dir="rtl">
 
-1. Download the ZIP from the [MIMIC-IV demo page](https://physionet.org/content/mimic-iv-demo/2.2/) (open access) into `data/raw/`. Don't unzip it.
-2. Run:
+## הרצה
+
+1. מורידים את קובץ ה-ZIP מ[עמוד הדמו של MIMIC-IV](https://physionet.org/content/mimic-iv-demo/2.2/) (גישה פתוחה) לתיקייה `data/raw/`. לא לחלץ אותו.
+2. מריצים:
+
+</div>
 
 ```bash
 pip install -r requirements.txt
-python run_pipeline.py              # all steps
-python run_pipeline.py feasibility  # or a single step
-pytest                              # unit tests (pip install -r requirements-dev.txt)
+python run_pipeline.py              # כל השלבים
+python run_pipeline.py feasibility  # או שלב בודד
+pytest                              # בדיקות יחידה (pip install -r requirements-dev.txt)
 ```
 
-3. Open `bi/ClinicalResearchDesk.pbip` in Power BI Desktop. If your folder differs, set the `DataFolder` parameter (Transform data → Edit parameters) to your `bi/data` path and press Refresh.
+<div dir="rtl">
 
-## Data licence
+3. פותחים את `bi/ClinicalResearchDesk.pbip` ב-Power BI Desktop. אם התיקייה שלכם שונה, מגדירים את הפרמטר `DataFolder` (Transform data ← Edit parameters) לנתיב של `bi/data` ולוחצים Refresh.
 
-MIMIC-IV Clinical Database Demo is available under the Open Data Commons Open Database License v1.0. Raw data and patient-level extracts are not committed to this repository.
+## רישיון הנתונים
 
-The study proposal, investigator and approval in this project are fictional. The project is a personal portfolio piece and is not affiliated with, or endorsed by, any hospital or research institution.
+MIMIC-IV Clinical Database Demo זמין תחת הרישיון Open Data Commons Open Database License v1.0. הנתונים הגולמיים וקובצי החילוץ ברמת המטופל לא נשמרים במאגר הזה.
+
+הצעת המחקר, החוקר והאישור בפרויקט הזה פיקטיביים. הפרויקט הוא תיק עבודות אישי, ואינו קשור לבית חולים או למוסד מחקר כלשהו, ואינו מאושר על ידם.
 
 > Johnson, A., Bulgarelli, L., Pollard, T., Horng, S., Celi, L. A., & Mark, R. (2023). *MIMIC-IV Clinical Database Demo* (version 2.2). PhysioNet. https://doi.org/10.13026/dp1f-ex47
+
+</div>
