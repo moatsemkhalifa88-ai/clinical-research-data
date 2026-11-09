@@ -28,6 +28,7 @@
               },
               "queryRef": "dim_lactate_band.lactate_band",
               "nativeQueryRef": "lactate_band",
+              "active": true,
               "displayName": "טווח לקטט (mmol/L)"
             }
           ]

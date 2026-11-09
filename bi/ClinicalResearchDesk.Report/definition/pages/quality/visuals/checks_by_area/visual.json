@@ -28,6 +28,7 @@
               },
               "queryRef": "validation_checks.area",
               "nativeQueryRef": "area",
+              "active": true,
               "displayName": "תחום"
             }
           ]

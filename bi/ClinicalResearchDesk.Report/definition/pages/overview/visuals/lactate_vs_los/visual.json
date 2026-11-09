@@ -28,7 +28,27 @@
               },
               "queryRef": "fact_patient.study_id",
               "nativeQueryRef": "study_id",
+              "active": true,
               "displayName": "מטופל"
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_patient"
+                    }
+                  },
+                  "Property": "in_hospital_death"
+                }
+              },
+              "queryRef": "fact_patient.in_hospital_death",
+              "nativeQueryRef": "in_hospital_death",
+              "displayName": "נפטר באשפוז"
             }
           ]
         },
@@ -52,6 +72,7 @@
               },
               "queryRef": "Sum(fact_patient.max_lactate_24h)",
               "nativeQueryRef": "max_lactate_24h",
+              "active": true,
               "displayName": "לקטט מרבי ב-24 השעות הראשונות (mmol/L)"
             }
           ]
@@ -77,25 +98,6 @@
               "queryRef": "Sum(fact_patient.icu_los_days)",
               "nativeQueryRef": "icu_los_days",
               "displayName": "משך השהייה בטיפול נמרץ (ימים)"
-            }
-          ]
-        },
-        "Series": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "fact_patient"
-                    }
-                  },
-                  "Property": "in_hospital_death"
-                }
-              },
-              "queryRef": "fact_patient.in_hospital_death",
-              "nativeQueryRef": "in_hospital_death",
-              "displayName": "נפטר באשפוז"
             }
           ]
         }

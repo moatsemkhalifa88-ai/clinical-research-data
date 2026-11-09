@@ -15,7 +15,17 @@ cultureInfo en-US
 			      "State": "Generated",
 			      "Terms": [
 			        {
-			          "Lactate (mmol/L)": {
+			          "לקטט (mmol/L)": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        },
+			        {
+			          "טווח לקטט (mmol/L)": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -36,7 +46,7 @@ cultureInfo en-US
 			      "State": "Generated",
 			      "Terms": [
 			        {
-			          "Level": {
+			          "רמה": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -57,7 +67,7 @@ cultureInfo en-US
 			      "State": "Generated",
 			      "Terms": [
 			        {
-			          "In-hospital mortality": {
+			          "תמותה באשפוז": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -78,7 +88,7 @@ cultureInfo en-US
 			      "State": "Generated",
 			      "Terms": [
 			        {
-			          "30-day mortality": {
+			          "תמותה תוך 30 יום": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -99,7 +109,7 @@ cultureInfo en-US
 			      "State": "Generated",
 			      "Terms": [
 			        {
-			          "Patient": {
+			          "מטופל": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -120,7 +130,7 @@ cultureInfo en-US
 			      "State": "Generated",
 			      "Terms": [
 			        {
-			          "Died in hospital": {
+			          "נפטר באשפוז": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -141,7 +151,7 @@ cultureInfo en-US
 			      "State": "Generated",
 			      "Terms": [
 			        {
-			          "Area": {
+			          "תחום": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -162,7 +172,7 @@ cultureInfo en-US
 			      "State": "Generated",
 			      "Terms": [
 			        {
-			          "Result": {
+			          "תוצאה": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -183,7 +193,7 @@ cultureInfo en-US
 			      "State": "Generated",
 			      "Terms": [
 			        {
-			          "Layer": {
+			          "שכבה": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -204,7 +214,7 @@ cultureInfo en-US
 			      "State": "Generated",
 			      "Terms": [
 			        {
-			          "Check": {
+			          "בדיקה": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",
@@ -225,7 +235,425 @@ cultureInfo en-US
 			      "State": "Generated",
 			      "Terms": [
 			        {
-			          "Rows with problems": {
+			          "שורות עם בעיה": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "fact_patient.patients": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "fact_patient",
+			          "ConceptualProperty": "Patients"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "מטופלים": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        },
+			        {
+			          "מטופלים שנכללו": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "fact_patient.deaths": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "fact_patient",
+			          "ConceptualProperty": "Deaths"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "פטירות": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        },
+			        {
+			          "פטירות באשפוז": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "fact_patient.high_lactate_share": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "fact_patient",
+			          "ConceptualProperty": "High Lactate Share"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "לקטט > 2 mmol/L": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "fact_patient.median_max_lactate": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "fact_patient",
+			          "ConceptualProperty": "Median Max Lactate"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "חציון הלקטט המרבי (mmol/L)": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "fact_patient.median_icu_los_days": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "fact_patient",
+			          "ConceptualProperty": "Median ICU LOS (days)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "חציון השהייה בטיפול נמרץ (ימים)": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "fact_patient.risk_ratio_high_vs_normal": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "fact_patient",
+			          "ConceptualProperty": "Risk Ratio (High vs Normal)"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "יחס סיכון לתמותה": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "fact_patient.sample_size_note": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "fact_patient",
+			          "ConceptualProperty": "Sample Size Note"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "הערת גודל מדגם": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "fact_patient.admission_group": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "fact_patient",
+			          "ConceptualProperty": "admission_group"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "סוג קבלה": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "fact_patient.sex": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "fact_patient",
+			          "ConceptualProperty": "sex"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "מין": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "dim_age_band.age_band": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "dim_age_band",
+			          "ConceptualProperty": "age_band"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "קבוצת גיל": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "dim_care_unit.care_unit": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "dim_care_unit",
+			          "ConceptualProperty": "care_unit"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "יחידה": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        },
+			        {
+			          "יחידת טיפול נמרץ": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "validation_checks.checks": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "validation_checks",
+			          "ConceptualProperty": "Checks"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "בדיקות": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        },
+			        {
+			          "בדיקות שהורצו": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "validation_checks.checks_passed": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "validation_checks",
+			          "ConceptualProperty": "Checks Passed"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "עברו": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "validation_checks.checks_warned": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "validation_checks",
+			          "ConceptualProperty": "Checks Warned"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "אזהרות (מתועדות)": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "validation_checks.checks_failed": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "validation_checks",
+			          "ConceptualProperty": "Checks Failed"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "נכשלו": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "validation_checks.release_decision": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "validation_checks",
+			          "ConceptualProperty": "Release Decision"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "החלטת מסירה": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "cohort_flow.step": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "cohort_flow",
+			          "ConceptualProperty": "step"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "שלב": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "cohort_flow.patients_at_step": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "cohort_flow",
+			          "ConceptualProperty": "Patients at Step"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "מטופלים בשלב": {
 			            "State": "Suggested",
 			            "Source": {
 			              "Type": "External",

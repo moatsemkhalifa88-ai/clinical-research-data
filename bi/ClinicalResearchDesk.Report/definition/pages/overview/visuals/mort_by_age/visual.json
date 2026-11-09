@@ -28,6 +28,7 @@
               },
               "queryRef": "dim_age_band.age_band",
               "nativeQueryRef": "age_band",
+              "active": true,
               "displayName": "קבוצת גיל"
             }
           ]

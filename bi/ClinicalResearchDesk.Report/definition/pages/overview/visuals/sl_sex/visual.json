@@ -28,6 +28,7 @@
               },
               "queryRef": "fact_patient.sex",
               "nativeQueryRef": "sex",
+              "active": true,
               "displayName": "מין"
             }
           ]

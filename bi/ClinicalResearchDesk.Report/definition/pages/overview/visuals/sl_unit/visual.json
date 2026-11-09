@@ -28,6 +28,7 @@
               },
               "queryRef": "dim_care_unit.care_unit",
               "nativeQueryRef": "care_unit",
+              "active": true,
               "displayName": "יחידת טיפול נמרץ"
             }
           ]

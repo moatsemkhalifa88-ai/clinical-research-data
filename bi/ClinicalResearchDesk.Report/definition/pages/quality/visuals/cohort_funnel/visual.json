@@ -28,6 +28,7 @@
               },
               "queryRef": "cohort_flow.step",
               "nativeQueryRef": "step",
+              "active": true,
               "displayName": "שלב"
             }
           ]
